@@ -1,4 +1,3 @@
-
 def readAdvertisementStream(builder, fileName):
     with open(fileName, "r") as file:
         lines = file.readlines()
