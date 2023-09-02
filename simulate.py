@@ -1,11 +1,7 @@
-
-from Simulator.AdvertismentManager import AdvertismentManager
-from Simulator.ModeratorManager import ModeratorManager
-
-# init, read moderators and advertisements from file
+from data import adManager, modManager
 
 
-
+''''
 def simulate(advertisementStream, moderators, algo):
     timeround = 0
     moderatorManager = ModeratorManager(moderators)
@@ -25,7 +21,14 @@ def simulate(advertisementStream, moderators, algo):
         advertisementManager.markAsDone(finishedTasks)
 
     drawer.draw(database)
+'''
 
+'''
+builder = mockAdvertisementBuilder()
+advertisementss = readAdvertisementStream(builder, "./inputs/AdvertisementStream.txt")
+print(advertisementss)
+'''
+print(adManager)
 
     
     
