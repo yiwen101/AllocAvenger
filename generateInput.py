@@ -25,12 +25,16 @@ def generateModerators(number,builder, fileName):
 def readAdvertisementStream(builder, fileName):
     with open(fileName, "r") as file:
         lines = file.readlines()
+        print(lines)
         Advertismentss = []
         for i in range(0, len(lines)):
-            lines = lines[i].split(" ")
+            current_lines = lines[i].split(" ")
             Advertisments = []
-            for j in range(0, len(lines)):
-                Advertisments.append(builder.read(lines[j]))
+            for j in range(0, len(current_lines)):
+                input = current_lines[j]
+                if input == "" or input == "\n" or input == " " or input == " \n":
+                    continue
+                Advertisments.append(builder.read(input))
             Advertismentss.append(Advertisments)
     file.close()
     return Advertismentss
@@ -70,7 +74,11 @@ class mockModeratorBuilder:
           ability.append(int(strings[i]))
        return Moderator(ability)
 
+'''
 builder = mockAdvertisementBuilder()
 generateAdvertisementStream(100, 10, builder, "./inputs/AdvertisementStream.txt")
 builder = mockModeratorBuilder()
 generateModerators(17, builder, "./inputs/Moderators.txt")
+'''
+stream = readAdvertisementStream(mockAdvertisementBuilder(), "./inputs/AdvertisementStream.txt")
+print(stream)
