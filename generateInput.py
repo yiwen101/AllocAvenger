@@ -44,7 +44,7 @@ def readModerators(builder, fileName):
         lines = file.readlines()
         Moderators = []
         for i in range(0, len(lines)):
-            Moderators.append(builder.read(lines[i]))
+            Moderators.append(builder.read(lines[i].replace("\n", "")))
     file.close()
     return Moderators  
          
@@ -80,5 +80,6 @@ generateAdvertisementStream(100, 10, builder, "./inputs/AdvertisementStream.txt"
 builder = mockModeratorBuilder()
 generateModerators(17, builder, "./inputs/Moderators.txt")
 '''
-stream = readAdvertisementStream(mockAdvertisementBuilder(), "./inputs/AdvertisementStream.txt")
+#stream = readAdvertisementStream(mockAdvertisementBuilder(), "./inputs/AdvertisementStream.txt")
+stream = readModerators(mockModeratorBuilder(), "./inputs/Moderators.txt")
 print(stream)
