@@ -8,8 +8,6 @@ Should be able to regenerate by running the generateInput.py file; can replace t
 
 The data package will automatically read, decode and generate advertisement and moderator manager objects.
 
-Up to this line, I have tested the features, and they should work fine.
+I have also completed the simulator package, which is able to simulate the whole process of the system, and compute the totol loss and util rate.
 
-
-
-I have outlined the the simulate.py, but have not tested it yet, and I expect it to have some bugs. If you have time tonight, plese help me with it. Thanks! 
+todo: replace the mock builder with real builder, and replace the mock algo with real algo.
