@@ -1,8 +1,8 @@
 # Open a file in write mode (creates the file if it doesn't exist)
 import random
 
-from data.advertisement import Advertisment,mockAdvertisementBuilder
-from data.moderator import Moderator,mockModeratorBuilder
+from data.advertisement import MockAdvertisementBuilder
+from data.moderator import MockModeratorBuilder
 
 
 def generateAdvertisementStream(timeRound, maxNumPerRound, builder, fileName):
@@ -27,9 +27,9 @@ def generateModerators(number,builder, fileName):
 
 
 
-'''
-builder = mockAdvertisementBuilder()
+
+builder = MockAdvertisementBuilder()
 generateAdvertisementStream(100, 10, builder, "./inputs/AdvertisementStream.txt")
-builder = mockModeratorBuilder()
+builder = MockModeratorBuilder()
 generateModerators(17, builder, "./inputs/Moderators.txt")
-'''
+
