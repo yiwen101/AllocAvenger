@@ -13,7 +13,7 @@ class Moderator:
     
 
     def getAdTimeEstimate(self, advertisement):
-        return self.Ability[advertisement.type]
+        return self.Ability[advertisement.adType]
     
     def isIdle(self):
         return self.workOn == None
@@ -21,17 +21,17 @@ class Moderator:
     def assign(self, advertisement):
         if(not self.isIdle()):
             raise Exception("Moderator is not idle")
-        workOn = advertisement
-        expectedRemainingTime = self.getAdTimeEstimate(advertisement)
+        self.workOn = advertisement
+        self.expectedRemainingTime = self.getAdTimeEstimate(advertisement)
 
     def work(self, completedTasks):
         self.totalWorkTime += 1
         if(not self.isIdle()):
-          expectedRemainingTime -= 1
+          self.expectedRemainingTime -= 1
           self.workcount += 1
-          if(expectedRemainingTime == 0):
-              completedTasks.append(workOn)
-              workOn = None
+          if(self.expectedRemainingTime == 0):
+              completedTasks.append(self.workOn)
+              self.workOn = None
 
 class ModeratorManager:
     moderators = []
@@ -42,11 +42,11 @@ class ModeratorManager:
     def getModerators(self):
        return self.moderators
 
-    def assign(self,ids, advertisements):
+    def assign(self,advertisements, ids):
         for i in range(0, len(ids)):
             moderator = self.moderators[ids[i]]
-            advertisements = advertisements[i]
-            moderator.assign(advertisements)
+            advertisement = advertisements[i]
+            moderator.assign(advertisement)
                  
     def work(self):
         completedTasks = []
@@ -54,17 +54,17 @@ class ModeratorManager:
             moderator.work(completedTasks)
         return completedTasks
     
-    def assignAndWork(self, ids, advertisements):
-        self.assign(ids, advertisements)
+    def assignAndWork(self, advertisements, ids):
+        self.assign(advertisements, ids)
         return self.work()
     
-    def getUntilRate(self):
+    def getUtilRate(self):
         totalWorkTime = 0
         totalWorkCount = 0
         for moderator in self.moderators:
             totalWorkTime += moderator.totalWorkTime
             totalWorkCount += moderator.workcount
-        return totalWorkTime / totalWorkCount
+        return totalWorkCount / totalWorkTime
     
 class MockModeratorBuilder:
     def build(self):

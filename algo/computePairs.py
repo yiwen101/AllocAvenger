@@ -1,11 +1,14 @@
 def computePairs(ads, moderators):
-    nextAdID = 0
     tasks = []
     moderatorIDs = []
-    for i in range(0, len(moderators)):
-        if moderators[i].isIdle() and nextAdID < len(ads):
-            tasks.append(ads[nextTaskID])
-            moderatorIDs.append(i)
-            nextTaskID += 1
-    return (moderatorIDs, tasks)    
-
+    nextModerator = 0
+    for ad in ads:
+        for i in range(nextModerator, len(moderators)):
+            if moderators[i].isIdle():
+                tasks.append(ad)
+                moderatorIDs.append(i)
+                nextModerator = i + 1
+                break
+        if nextModerator == len(moderators):
+            break
+    return tasks, moderatorIDs

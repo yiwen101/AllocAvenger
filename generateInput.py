@@ -21,13 +21,6 @@ def generateModerators(number,builder, fileName):
             file.write(builder.build() + "\n")
     file.close()
 
-
-
-         
-
-
-
-
 builder = MockAdvertisementBuilder()
 generateAdvertisementStream(100, 10, builder, "./inputs/AdvertisementStream.txt")
 builder = MockModeratorBuilder()

@@ -1,2 +1,2 @@
-def computeAdValue(self, advertisement):
+def computeAdValue(advertisement):
     return advertisement.value

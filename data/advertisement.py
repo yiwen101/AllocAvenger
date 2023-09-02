@@ -8,6 +8,8 @@ class Advertisment:
         self.id = id
     def getID(self):
         return self.id
+    def toString(self):
+        return "type: " + str(self.adType) + "/" + str(self.value)
 
 class AdvertismentManager:
     def __init__(self, advertisementStream):
@@ -27,25 +29,23 @@ class AdvertismentManager:
                 self.nextId += 1
         self.timeRound += 1
             
-    def get_advertisments(self):
-        advertisements = []
-        for _, value in self.unAssignedAds():
-            advertisements.append(value)
-        return advertisements
+    def getAdvertisements(self):
+        return self.unAssignedAds.values()
+        
     
     def markAsDone(self, ads):
         for ad in ads:
             self.incompletedAds.pop(ad.getID())
     
-    def markasAssigned(self, ads):
+    def markAsAssigned(self, ads):
         for ad in ads:
             self.unAssignedAds.pop(ad.getID())
         
-    def AllDone(self):
-        return len(self.current_advertisments) == 0 and self.timeRound > 0
+    def allDone(self):
+        return len(self.incompletedAds) == 0 and self.timeRound > 0
     
     def updateLoss(self, valueFunction):
-        for ad in self.incompletedAds:
+        for ad in self.incompletedAds.values():
             self.totalLost += valueFunction(ad)
             
     def getLoss(self):
@@ -53,11 +53,13 @@ class AdvertismentManager:
 
 class MockAdvertisementBuilder:
     def build(self):
-       type = random.randint(0, 10)
+       type = random.randint(0, 9)
        value = random.randint(0, 100)
        return str(type) + "/" + str(value)
     
     def read(self, string):
        strings = string.split("/")
-       return Advertisment(int(strings[1]), int(strings[0]))
+       adType = int(strings[0])
+       value = int(strings[1])
+       return Advertisment(value, adType)
 
