@@ -17,7 +17,6 @@ class Moderator:
         self.tasksEstimatedTime.append(estimatedTime)
         self.totalTaskRemainTime += estimatedTime
     
-    # sideeffect: if the task is completed, than add it to the competedTasks list
     def work(self):
         self.totalWorkTime += 1
         if(not self.isIdle()):
@@ -71,10 +70,8 @@ class ModeratorManager:
        return self.moderators
                  
     def work(self):
-        completedTasks = []
         for moderator in self.moderators:
-            moderator.work(completedTasks)
-        return completedTasks
+            moderator.work()
     
     def getUtilRate(self):
         totalWorkTime = 0
@@ -84,6 +81,20 @@ class ModeratorManager:
             totalWorkCount += moderator.workcount
         return totalWorkCount / totalWorkTime
 
+def ModeratorManagerTest():
+    mod1 = Moderator({"moderator":1,"market":["US","CA"],"Productivity":286.2176,"Utilisation":0.8124,"handling time":123549,"accuracy":0.99})
+    mod2 = Moderator({"moderator":2,"market":["US","CA"],"Productivity":286.2176,"Utilisation":0.8124,"handling time":123549,"accuracy":0.99})
+    mod3 = Moderator({"moderator":3,"market":["US","CA"],"Productivity":286.2176,"Utilisation":0.8124,"handling time":123549,"accuracy":0.99})
+    mods = [mod1, mod2, mod3]
+    modManager = ModeratorManager([mod1, mod2, mod3])
+    ok = modManager.getModerators() == mods
+    modManager.work()
+    ok = ok and mod1.totalWorkTime == 1 and mod2.totalWorkTime == 1 and mod3.totalWorkTime == 1
+    if ok:
+        print("ModeratorManagerTest passed")
+    else:
+        print("ModeratorManagerTest failed")
+      
 #data/advertisement
 class Advertisement:
     def __init__(self, properties, estimator):
@@ -107,6 +118,9 @@ class Advertisement:
          
     def getLoss(self):
         return self.accumulatedLoss
+    
+    def setId(self, id):
+        self.id = id
 
 def AdvertisementTest():
     class mockEstimator:
@@ -141,20 +155,28 @@ class AdvertismentManager:
         self.totalLost = 0
     
     def update(self):
+        toPop = []
         for ad in self.incompletedAds.values():
-            if ad.isdone:
-                self.incompletedAds.pop(ad.getID())
+            if ad.isDone:
+                toPop.append(ad.id)
             else:
                 ad.updateLoss()
         
+        for id in toPop:
+            self.incompletedAds.pop(id)
+        
+        toPop = []
+        
         for ad in self.unAssignedAds.values():
             if ad.isAssigned:
-                self.unAssignedAds.pop(ad.getID())
+                toPop.append(ad.id)
+        for id in toPop:
+            self.unAssignedAds.pop(id)
                 
         # get new incoming flow of ads
         if self.timeRound < len(self.advertisementStream):
             for ad in self.advertisementStream[self.timeRound]:
-                ad.setID(self.nextId)
+                ad.setId(self.nextId)
                 self.incompletedAds[self.nextId] = ad
                 self.unAssignedAds[self.nextId] = ad
                 self.allAds.append(ad)
@@ -162,7 +184,10 @@ class AdvertismentManager:
         self.timeRound += 1
             
     def getUnassignedAds(self):
-        return self.unAssignedAds.values() 
+        ans = []
+        for ad in self.unAssignedAds.values():
+            ans.append(ad)
+        return ans
     
     def allDone(self):
         return len(self.incompletedAds) == 0 and self.timeRound > 0
@@ -172,7 +197,44 @@ class AdvertismentManager:
         for ad in self.allAds:
             totalLoss += ad.getLoss()
         return totalLoss
-            
+
+def AdvertismentManagerTest():
+     class mockEstimator:
+        def estimate(self,a):
+            return 5
+        def estimateRisk(self,a):
+            return 0.1
+        def estimateRevenue(self,a):
+            return 6
+    
+     ad00 = Advertisement({},mockEstimator())
+     ad01 = Advertisement({},mockEstimator())
+     ad10 = Advertisement({},mockEstimator())
+     ads0 = [ad00, ad01]
+     ads1 = [ad10]
+     adss = [ads0, ads1]
+     adM = AdvertismentManager(adss)
+     ok = adM.getUnassignedAds() == []
+     adM.update()
+     ok = ok and adM.getUnassignedAds() == ads0
+     ad00.assign()
+     ad00.done()
+     ad01.assign()
+     adM.update()
+     ok = ad00.accumulatedLoss == 0 and adM.getUnassignedAds() == ads1 and ad01.accumulatedLoss == 5
+     ad01.done()
+     ad10.assign()
+     adM.update()
+     
+     ok = ok and adM.getUnassignedAds() == [] and ad10.accumulatedLoss == 5 and adM.getLoss() == 10
+     if ok:
+        print("AdvertismentManagerTest passed")
+     else:
+        print("AdvertismentManagerTest failed")
+     
+     
+     
+           
 
 # Parser
 def propertyAssertHelper(v1, v2,property):
@@ -266,13 +328,12 @@ class advertisementParser:
         return Advertisement(properties, self.estimator)
     
 class moderatorParser:
-    def __init__(self, estimator):
+    def __init__(self):
         self.propertiesParser = moderatorPropertiesParser()
-        self.estimator = estimator
         
     def parse(self,moderatorStr):
         properties = moderatorPropertiesParser.parse(moderatorStr)
-        return Moderator(properties, self.estimator)
+        return Moderator(properties)
 
 class advertisementStreamParser:
     def __init__(self, advertisementParser):
@@ -353,8 +414,27 @@ class revenueRiskBasedValueEstimator:
     def estimateRisk(self, ad):
         return self.riskEstimator.estimate(ad)
  
+def revenueRiskBasedValueEstimatorTest():
+    class mockRevenueEstimator:
+        def estimate(self, ad):
+            return 5
+    class mockRiskEstimator:
+        def estimate(self, ad):
+            return 0.1
+    estimator1 = revenueRiskBasedValueEstimator(mockRevenueEstimator(), mockRiskEstimator(), 0)
+    ad1 = Advertisement({}, estimator1)
+    ok = ad1.risk == 0.1 and ad1.revenue == 5 and ad1.value == 4.5
+    estimator2 = revenueRiskBasedValueEstimator(mockRevenueEstimator(), mockRiskEstimator(), 10)
+    ad2 = Advertisement({}, estimator2)
+    ok = ok and ad2.risk == 0.1 and ad2.revenue == 5 and ad2.value == 4.5 - 10 * 0.1 * 5
+    
+    if ok:
+        print("revenueRiskBasedValueEstimatorTest passed")
+    else:
+        print("revenueRiskBasedValueEstimatorTest failed")
+
 class moderatorUnitTimeValueEstimator:
-    def __init__(self, durationEstimator, punishingFactor, accuracyEstimator):
+    def __init__(self, durationEstimator, accuracyEstimator, punishingFactor,):
         self.durationEstimator = durationEstimator
         self.punishingFactor = punishingFactor
         self.accuracyEstimator = accuracyEstimator
@@ -374,100 +454,214 @@ class moderatorUnitTimeValueEstimator:
     def estimateDuration(self, mod, ad):
         return self.durationEstimator.estimate(mod, ad)
 
-class greedyIdleOnlyAllcator:
+def moderatorUnitTimeValueEstimatorTest():
+    class mockDurationEstimator:
+        def estimate(self, mod, ad):
+            return 5
+    class mockAccuracyEstimator:
+        def estimate(self, mod, ad):
+            return 0.9
+    class mockAd:
+        def __init__(self):
+            self.risk = 0.1
+            self.revenue = 5
+    
+    estimator1 = moderatorUnitTimeValueEstimator(mockDurationEstimator(), mockAccuracyEstimator(), 0)
+    ad = mockAd()
+    mod = Moderator({})
+    ok = abs(estimator1.estimate(mod, ad) - 0.9 * 5 * 0.9 / 5) < 0.000001
+    estimator2 = moderatorUnitTimeValueEstimator(mockDurationEstimator(), mockAccuracyEstimator(), 10)
+    ok = ok and abs(estimator2.estimate(mod, ad) - (0.9 * 5 * 0.9 / 5 - 10 * 0.1 * 0.1 * 5 / 5)) < 0.000001
+    if ok:
+        print("moderatorUnitTimeValueEstimatorTest passed")
+    else:
+        print("moderatorUnitTimeValueEstimatorTest failed")
+
+class greedyIdleOnlyAllocator:
     def __init__(self,unitTimeValueEstimator):
         self.unitTimeValueEstimator = unitTimeValueEstimator
     
     def allocate(self, ads, mods):
-        tasks = []
-        moderatorIDs = []
-        mods = mods.filter(lambda mod: mod.isIdle())
-        ads = ads.sort(key=lambda ad: ad.value)
+        mods = list(filter(lambda mod: mod.isIdle(), mods))
+        ads.sort(key=lambda ad: ad.value)
         
+        while(0 < len(ads) and 0 < len(mods)):
+            #most valuable ad
+            ad = ads.pop()
+            mod = mod = max(mods, key=lambda mod: self.unitTimeValueEstimator.estimate(mod, ad))
+            mods.remove(mod)
+            mod.assign(ad, self.unitTimeValueEstimator.estimateDuration(mod, ad))
+        
+
+def greedyIdleOnlyAllocatorTest():
+    class mockMod:
+        def __init__(self, value):
+            self.idle = True
+            self.value = value
+            self.assigned = None
+        def isIdle(self):
+            return self.idle
+        def assign(self, ad, duration):
+            self.idle = False
+            ad.assign()
+            ad.assignTo(self)
+    
+    class mockAd:
+        def __init__(self, value):
+            self.value = value
+            self.isAssigned = False
+            self.assigned = None
+        def assign(self):
+            self.isAssigned = True
+        def assignTo(self, mod):
+            self.assigned = mod
+    class mockUnitTimeValueEstimator:
+        def estimate(self, mod, ad):
+            return mod.value
+        def estimateDuration(self, mod, ad):
+            return 1
+    
+    ad1, ad2, ad3 = mockAd(1), mockAd(2), mockAd(3)
+    mod1, mod2, mod3  = mockMod(1), mockMod(2), mockMod(3)
+    mod2.idle = False
+    
+    allocator = greedyIdleOnlyAllocator(mockUnitTimeValueEstimator())
+    allocator.allocate([ad1, ad2, ad3], [mod1, mod2, mod3])
+    
+    ok = not mod1.isIdle() and not mod2.isIdle() and not mod3.isIdle() and ad2.isAssigned and ad3.isAssigned
+    ok = ok and ad2.assigned == mod1 and ad3.assigned == mod3
+    if ok:
+        print("greedyIdleOnlyAllcatorTest passed")
+    else:
+        print("greedyIdleOnlyAllcatorTest failed")
+     
+class randomAllocator:
+    def __init__(self,unitTimeValueEstimator):
+        pass
+        
+    def allocate(self, ads, mods):
+        mods = list(filter(lambda mod: mod.isIdle(), mods))
+        while(0 < len(ads) and 0 < len(mods)):
+            ad = ads.pop()
+            mod = mods.pop()
+            mod.assign(ad)
+    
+
+def randomAllocatorTest():
+    class mockMod:
+        def __init__(self, value):
+            self.idle = True
+            self.value = value
+            self.assigned = None
+        def isIdle(self):
+            return self.idle
+        def assign(self, ad):
+            self.idle = False
+            ad.assign()
+            ad.assignTo(self)
+    
+    class mockAd:
+        def __init__(self, value):
+            self.value = value
+            self.isAssigned = False
+            self.assigned = None
+        def assign(self):
+            self.isAssigned = True
+        def assignTo(self, mod):
+            self.assigned = mod
+    ad3,ad1, ad2, ad4 = mockAd(3), mockAd(1), mockAd(3), mockAd(4)
+    mod1, mod2, mod3  = mockMod(3), mockMod(1), mockMod(2)
+    
+    allocator = randomAllocator(None)
+    allocator.allocate([ad3, ad1, ad2, ad4], [mod1, mod2, mod3])
+    ok = not mod1.isIdle() and not mod2.isIdle() and not mod3.isIdle() and ad1.isAssigned and ad2.isAssigned and not ad3.isAssigned and ad4.isAssigned
+    if ok:
+        print("randomAllcatorTest passed")
+    else:
+        print("randomAllcatorTest failed")
+
+class greedyAllocator:
+    def __init__(self,unitTimeValueEstimator):
+        self.unitTimeValueEstimator = unitTimeValueEstimator
+    def allocate(self,ads, mods):
+        ads.sort(key=lambda ad: ad.value)
         while(0 < len(ads)):
             #most valuable ad
             ad = ads.pop()
-            mod = mods.max(key=lambda mod: self.unitTimeValueEstimator.estimate(mod, ad))
-            tasks.append(ad)
-            moderatorIDs.append(mod.getID())
+            mod = mod = max(mods, key=lambda mod: self.unitTimeValueEstimator.estimate(mod, ad))
+            mod.assign(ad, self.unitTimeValueEstimator.estimateDuration(mod, ad))
         
-        return tasks, moderatorIDs          
- 
-class randomAllcator:
-    def allocate(self, ads, mods):
-        tasks = []
-        moderatorIDs = []
-        nextAd = 0
-        ads = ads.sort(key=lambda ad: ad.value)
-        
-        while(0 < len(ads) and 0 < len(mods)):
-            #most valuable ad
-            ad = ads.pop()
-            mod = mods.pop()
-            tasks.append(ad)
-            moderatorIDs.append(mod.getID())      
-        return tasks, moderatorIDs
-
-class greedyAllcator:
-    def allocate(self,ads, mods):
-        tasks = []
-        moderatorIDs = []
-        ads = ads.sort(key=lambda ad: ad.value)
-        while(0 < len(ads) and 0 < len(mods)):
-            #most valuable ad
-            ad = ads.pop()
-            mod = mods.max(key=lambda mod: mod.unitTimeValueforAd(ad))
-            mods.remove(mod)
-            tasks.append(ad)
-            moderatorIDs.append(mod.getID())
-        
+def greedyAllocatorTest():
+    class mockMod:
+        def __init__(self, value):
+            self.value = value
+            self.time = 0
+        def assign(self, ad, duration):
+            self.time += duration
+            ad.assignTo(self)
+    
+    class mockAd:
+        def __init__(self, value):
+            self.value = value
+            self.isAssigned = False
+            self.assigned = None
+        def assign(self):
+            self.isAssigned = True
+        def assignTo(self, mod):
+            self.assigned = mod
+    
+    class mockUnitTimeValueEstimator:
+        def estimate(self, mod, ad):
+            return mod.value / (1 + mod.time)
+        def estimateDuration(self, mod, ad):
+            return 5
+    mod1, mod9 = mockMod(1), mockMod(9)
+    ad1, ad2, ad3 = mockAd(1), mockAd(2), mockAd(3)
+    allocator = greedyAllocator(mockUnitTimeValueEstimator())
+    allocator.allocate([ad1, ad2, ad3], [mod1, mod9])
+    ok = ad3.assigned == mod9 and ad2.assigned == mod9 and ad1.assigned == mod1
+    if ok:
+        print("greedyAllcatorTest passed")
+    else:
+        print("greedyAllcatorTest failed")
 
        
 # simulator
-def simulate(adManager, modManager,algo):
+def simulate(adsFileName,modsFileName, adEstimator, modAdEstimator, allocatorClass):
+    adStream = advertisementStreamParser(advertisementParser(adEstimator)).parseFile(adsFileName)
+    adManager = AdvertismentManager(adStream)
+    
+    mods = moderatorsParser(moderatorParser()).parseFile(modsFileName)
+    modManager = ModeratorManager(mods)
+    
+    allocator = allocatorClass(modAdEstimator)
     
     while(not adManager.allDone()):
         # start of round n
-        
-        # add incoming ads this rounds to the pool of unfinished ads
         adManager.update()
-        # get the an array of unfinished ads
-        ads = adManager.getUnassignedAds()
-        # get an array of moderators that are available
-        mods = modManager.getModerators()
-        # generate paris of assigned ads to moderators
-        assignedAds, assignedMods = algo(ads, mods)
-        # mark the assigned ads as assigned
-        adManager.markAsAssigned(assignedAds)
-        # actually work on the assigned ads
-        finishedTasks = modManager.assignAndWork(assignedAds, assignedMods)
-        # mark the finished ads as done
-        adManager.markAsDone(finishedTasks) 
-        # end of round n
-        adManager.updateLoss()
-    
+        
+        allocator.allocate(adManager.getUnassignedAds(),modManager.getModerators())
+        
+        adManager.work()
+       
     loss = adManager.getLoss()
     utilRate = modManager.getUtilRate()
     return loss, utilRate
-
-def simulatorTest():
-    class mockAdValueEstimator:
-        def estimate(self, ad):
-            return ad.properties["value"]
-    class mockModEstimator:
-        def estimate(self,mod,ad):
-            return mod.properties["time"]
-   
-    ad1 = Advertisement()
-    return None
 
 
 
 # testing
 ModeratorTest()
+ModeratorManagerTest()
 AdvertisementTest()
+AdvertismentManagerTest()
 strToPropertiesParserTest()
 adPropertiesParserTest()
 moderatorPropertiesParserTest()
 advertisementStreamParserTest()
 moderatorParserTest()
+revenueRiskBasedValueEstimatorTest()
+moderatorUnitTimeValueEstimatorTest()
+greedyIdleOnlyAllocatorTest()
+randomAllocatorTest()
+greedyAllocatorTest()
