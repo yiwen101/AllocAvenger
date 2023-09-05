@@ -1,6 +1,6 @@
 # JunwuTeam
 
-todo: 
+todo:
 1 instantiate duration, risk, revenue, punishfactor, accuracy estimator
 2 find the best combination of parameters
 3 create input data file from the actual excel table; modify the "properties" parser where necessary.
