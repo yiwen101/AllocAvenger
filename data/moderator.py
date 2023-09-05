@@ -113,18 +113,4 @@ class Moderator:
     def getExpectedRemainingTime(self):
         return self.expectedRemainingTime
 
-class ModeratorBuilder:
-    def __init__(self, estimator):
-        self.estimator = estimator    
-       
-    def read(self, string):
-       properties = {}
-       property_strs = string.split("/")
-       for i in range(0, len(property_strs)):
-          property_str = property_strs[i]
-          property = property_str.split(":")
-          properties[property[0]] = property[1]
-        
-       return Moderator(properties, self.estimator)
-
 

@@ -1,15 +1,22 @@
-from data.advertisement import Advertisement
-from data.moderator import Moderator
-
-
 class strToPropertiesParser: 
-    def parse(string):
+    def parse(self,string):
         properties = {}
-        property_strs = string.split("/")
+        property_strs = string.split(":")
         for i in range(0, len(property_strs)):
           property_str = property_strs[i]
-          property = property_str.split(":")
+          property = property_str.split("/")
           properties[property[0]] = property[1]
+        return properties
+
+def strToPropertiesParserTest():
+    parser = strToPropertiesParser()
+    testStr = "p1/v1:p2/v2:p3/v3"
+    property = parser.parse(testStr)
+    ok = property["p1"]=="v1" and property["p2"]=="v2" and property["p3"]=="v3"
+    if ok:
+        print("strToPropertiesParserTest passed")
+    else:
+        print("strToPropertiesParserTest passed")
 
 class adPropertiesParser:
     def __init__(self):
@@ -17,9 +24,11 @@ class adPropertiesParser:
         
     def parse(advertisementStr):
         properties = strToPropertiesParser.parse(advertisementStr)
-        # do the type conversion
+        # todo "p_date"]
+        # In Python 3, the int type can represent integers of practically unlimited size, so there's usually no need to worry about the limitations of fixed-size integer types as you would in some other programming languages
+        properties["ad_id"]=int(properties["ad_id"])
         return properties
-    
+
 class moderatorPropertiesParser:
     def __init__(self):
         self.baseParser = strToPropertiesParser()
@@ -85,3 +94,5 @@ class moderatorsParser:
                 Moderators.append(self.moderatorParser.parse(lines[i]))
         file.close()
         return Moderators  
+
+strToPropertiesParserTest()

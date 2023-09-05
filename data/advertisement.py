@@ -1,6 +1,6 @@
 import random
 
-class Advertisment:
+class MockAdvertisment:
     def __init__(self, value, adType):
         self.value = value
         self.adType = adType
@@ -61,5 +61,42 @@ class MockAdvertisementBuilder:
        strings = string.split("/")
        adType = int(strings[0])
        value = int(strings[1])
-       return Advertisment(value, adType)
+       return MockAdvertisment(value, adType)
+
+class AdvertisementBuilder:
+     def read(self, string):
+       properties = {}
+       property_strs = string.split("/")
+       for i in range(0, len(property_strs)):
+          property_str = property_strs[i]
+          property = property_str.split(":")
+          properties[property[0]] = property[1]
+        
+       return Moderator(properties, self.estimator)
+   
+class Advertisement:
+    def __init__(self, properties, estimateValue):
+         self.properties = properties
+         self.estimateValue = estimateValue
+         self.accumulatedLoss = 0
+         self.isDone = False
+         self.isAssigned = False
+    
+    def isDone(self):
+        return self.isDone
+    
+    def isAssigned(self):
+        return self.isAssigned
+    
+    def assign(self):
+        self.isAssigned = True
+    
+    def done(self):
+        self.isDone = True
+    
+    def updateLoss(self):
+        self.accumulatedLoss += self.estimateValue(self.properties)
+         
+    def getLoss(self):
+        return self.accumulatedLoss
 

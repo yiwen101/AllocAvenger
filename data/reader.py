@@ -14,6 +14,7 @@ def readAdvertisementStream(builder, fileName):
     file.close()
     return Advertismentss
 
+# each line ends with \n should represents one moderator
 def readModerators(builder, fileName):
     with open(fileName, "r") as file:
         lines = file.readlines()
@@ -22,3 +23,4 @@ def readModerators(builder, fileName):
             Moderators.append(builder.read(lines[i].replace("\n", "")))
     file.close()
     return Moderators  
+
