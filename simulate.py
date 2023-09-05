@@ -1,6 +1,6 @@
 from data import adManager, modManager
 from algo.computePairs import computePairs
-from algo.computeAdValue import computeAdValue
+from algo.computeAdValue import mockComputeAdValue
 
 
 def simulate(algo):
@@ -23,7 +23,7 @@ def simulate(algo):
         # mark the finished ads as done
         adManager.markAsDone(finishedTasks) 
         # end of round n
-        adManager.updateLoss(computeAdValue)
+        adManager.updateLoss(mockComputeAdValue)
     
     loss = adManager.getLoss()
     utilRate = modManager.getUtilRate()

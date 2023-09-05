@@ -1,7 +1,7 @@
 import random
 
 
-class Moderator:
+class MockModerator:
 
     def __init__(self, ability):
          self.Ability = ability
@@ -80,5 +80,51 @@ class MockModeratorBuilder:
        ability = []
        for i in range(0, len(strings)):
           ability.append(int(strings[i]))
-       return Moderator(ability)
+       return MockModerator(ability)
+
+class Moderator:
+    def __init__(self, Properties, estimator):
+         self.Properties = Properties
+         self.workOn = None
+         self.expectedRemainingTime = 0
+         self.workcount = 0
+         self.totalWorkTime = 0
+         self.estimator = estimator
+        
+    def isIdle(self):
+        return self.workOn == None
+    
+    def assign(self, advertisement):
+        if(not self.isIdle()):
+            raise Exception("Moderator is not idle")
+        self.workOn = advertisement
+        self.expectedRemainingTime = self.estimator.estimate(self.Properties, advertisement)
+    
+    # work; if the task is completed, than add it to the competedTasks list
+    def work(self, completedTasks):
+        self.totalWorkTime += 1
+        if(not self.isIdle()):
+          self.expectedRemainingTime -= 1
+          self.workcount += 1
+          if(self.expectedRemainingTime == 0):
+              completedTasks.append(self.workOn)
+              self.workOn = None
+    
+    def getExpectedRemainingTime(self):
+        return self.expectedRemainingTime
+
+class ModeratorBuilder:
+    def __init__(self, estimator):
+        self.estimator = estimator    
+       
+    def read(self, string):
+       properties = {}
+       property_strs = string.split("/")
+       for i in range(0, len(property_strs)):
+          property_str = property_strs[i]
+          property = property_str.split(":")
+          properties[property[0]] = property[1]
+        
+       return Moderator(properties, self.estimator)
+
 

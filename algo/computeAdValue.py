@@ -1,2 +1,2 @@
-def computeAdValue(advertisement):
+def mockmockmockComputeAdValue(advertisement):
     return advertisement.value
