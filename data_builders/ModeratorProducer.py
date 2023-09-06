@@ -2,7 +2,7 @@ import json
 import numpy as np
 import pandas as pd
 
-class ModeratorBuilder():
+class ModeratorProducer():
     def __init__(self):
         pass
     
@@ -44,7 +44,7 @@ class ModeratorBuilder():
         return synthetic_df
 
 def moderatorBuilderTest():
-    builder = ModeratorBuilder()
+    builder = ModeratorProducer()
     ok = len(builder.generate_data(20)) == 20
     if ok:
         print("moderatorBuilderTest passed")

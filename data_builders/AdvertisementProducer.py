@@ -4,7 +4,7 @@ import json
 from sklearn.preprocessing import StandardScaler
 from numpy.random import multivariate_normal
 
-class AdvertisementBuilder():
+class AdvertisementProducer():
     def __init__(self):
         pass
 
@@ -67,7 +67,7 @@ class AdvertisementBuilder():
         return synthetic_df
 
 def advertisementBuilderTest():
-    builder = AdvertisementBuilder()
+    builder = AdvertisementProducer()
     ok = len(builder.generate_data(20)) == 20
     if ok:
         print("advertisementBuilderTest passed")
