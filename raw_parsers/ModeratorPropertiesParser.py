@@ -1,24 +1,21 @@
-import StrToPropertiesParser as strPar
+import ExcelParser as eParser
 
 
 class ModeratorPropertiesParser:
     def __init__(self):
-        self.baseParser = strPar.StrToPropertiesParser()
+        self.baseParser = eParser.ExcelToPropertiesParser()
 
     # make sure the data input is valid, entry with empty values are either rewritten as null value of the type or discarded.
-    def parse(self, moderatorStr):
-        properties = self.baseParser.parse(moderatorStr)
-        properties["moderator"] = int(properties["moderator"])
-        # this part, the one working on dealing iwth the input data should do extra work
-        properties["market"] = properties["market"].split("&")
-        # not sure why these two are in capital letters in the doc
-        properties["Productivity"] = float(properties["Productivity"])
-        properties["Utilisation"] = float(properties["Utilisation"])
-        properties["handling time"] = float(properties["handling time"])
-        properties["accuracy"] = float(properties["accuracy"])
-        return properties
+    def parse(self, path, sheet_name):
+        propertiess = self.baseParser.parse(path, sheet_name)
+        ans = []
+        for properties in propertiess:
+            if properties["Productivity"] is None or properties["Utilisation"] is None or properties["handling time"] is None or properties["accuracy"] is None:
+                continue
+            ans.append(properties)   
+        return ans
 
-
+'''
 def moderatorPropertiesParserTest():
     parser = ModeratorPropertiesParser()
     testStr = "moderator//1689841547143170::market//SA&OM&BH&QA&JO::Productivity//286.2176::Utilisation//0.8124::handling time//123549::accuracy//0.99"
@@ -32,3 +29,4 @@ def moderatorPropertiesParserTest():
         print("moderatorPropertiesParserTest passed")
     else:
         print("moderatorPropertiesParserTest failed")
+'''
