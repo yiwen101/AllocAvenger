@@ -7,8 +7,9 @@ class GreedyAllocator:
         while (0 < len(ads)):
             # most valuable ad
             ad = ads.pop()
+            # assign to the moderator with the highest value per unit time even after accounting for the time it takes to finish the current tasks
             mod = mod = max(mods, key=lambda
-                mod: self.unitTimeValueEstimator.estimate(mod, ad))
+                mod: ad.value/(self.unitTimeValueEstimator.estimateDuration(mod, ad) + mod.totalTaskRemainTime))
             mod.assign(ad,
                        self.unitTimeValueEstimator.estimateDuration(mod, ad))
 
@@ -17,10 +18,10 @@ def greedyAllocatorTest():
     class mockMod:
         def __init__(self, value):
             self.value = value
-            self.time = 0
+            self.totalTaskRemainTime = 0
 
         def assign(self, ad, duration):
-            self.time += duration
+            self.totalTaskRemainTime += duration
             ad.assignTo(self)
 
     class mockAd:
@@ -37,7 +38,7 @@ def greedyAllocatorTest():
 
     class mockUnitTimeValueEstimator:
         def estimate(self, mod, ad):
-            return mod.value / (1 + mod.time)
+            return mod.value
 
         def estimateDuration(self, mod, ad):
             return 5
