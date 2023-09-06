@@ -1,13 +1,14 @@
 import json
 import numpy as np
 import pandas as pd
+import os
 
 class ModeratorProducer():
     def __init__(self):
         pass
     
     def generate_data(self, num_samples):
-        json_file_path = 'moderator_raw.json'
+        json_file_path = os.path.dirname(__file__) + '\\moderator_raw.json' 
         data_list = []
         with open(json_file_path, 'r') as f:
             for line in f:

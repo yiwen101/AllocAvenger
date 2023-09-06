@@ -3,13 +3,14 @@ import pandas as pd
 import json
 from sklearn.preprocessing import StandardScaler
 from numpy.random import multivariate_normal
+import os
 
 class AdvertisementProducer():
     def __init__(self):
         pass
 
     def generate_data(self, num_samples):
-        json_file_path = 'ads_raw.json' 
+        json_file_path = os.path.dirname(__file__) + '\\ads_raw.json' 
         data_list = []
         
         with open(json_file_path, 'r') as f:
