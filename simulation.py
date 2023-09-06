@@ -1,7 +1,7 @@
-from parsers import AdvertisementStreamParser as adSPar
-from parsers import AdvertisementParser as asPar
-from parsers import ModeratorStreamParser as modSPar
-from parsers import ModeratorParser as modPar
+from raw_parsers import AdvertisementStreamParser as adSPar
+from raw_parsers import AdvertisementParser as asPar
+from raw_parsers import ModeratorStreamParser as modSPar
+from raw_parsers import ModeratorParser as modPar
 from managers import AdvertisementManager as adM
 from managers import ModeratorManager as modM
 # simulator
