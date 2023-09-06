@@ -40,4 +40,5 @@ class AdvertisementStreamBuilder:
         selected_objects = random.sample(ads_list, num)
         ads_stream.append(selected_objects)
     return ads_stream
-    
+
+

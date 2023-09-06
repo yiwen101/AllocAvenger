@@ -1,11 +1,14 @@
-import ExcelParser as eParser
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+import raw_parsers.ExcelParser as eParser
 
 
 class AdPropertiesParser:
     def __init__(self):
         self.baseParser = eParser.ExcelToPropertiesParser()
         self.ans = None
-    # run from the project directory
+    # run from the project root directory
     def parse(self):
         if self.ans is not None:
             return self.ans

@@ -12,3 +12,4 @@ class ExcelToPropertiesParser:
              dicts = df.to_dict('records')
              self.dicts = dicts
         return self.dicts
+

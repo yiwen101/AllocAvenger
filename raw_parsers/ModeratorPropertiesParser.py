@@ -1,4 +1,7 @@
-import ExcelParser as eParser
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+import raw_parsers.ExcelParser as eParser
 
 
 class ModeratorPropertiesParser:
@@ -6,6 +9,7 @@ class ModeratorPropertiesParser:
         self.baseParser = eParser.ExcelToPropertiesParser()
         self.ans = None
     
+    # please call this from the root direcotry of the project
     # make sure the data input is valid, entry with empty values are either rewritten as null value of the type or discarded.
     def parse(self):
         if self.ans is not None:
