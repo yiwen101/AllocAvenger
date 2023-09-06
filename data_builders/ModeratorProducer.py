@@ -19,7 +19,7 @@ class ModeratorProducer():
                     print(f"Skipping line due to JSONDecodeError: {e}")
         
         df = pd.DataFrame(data_list)
-        numerical_cols_corrected = ['Productivity', 'Utilisation %', 'handling time', ' accuracy ']
+        numerical_cols_corrected = ['Productivity', 'Utilisation %', 'handling time', 'accuracy']
         for col in numerical_cols_corrected:
             df[col] = pd.to_numeric(df[col], errors='coerce')
             
@@ -37,7 +37,7 @@ class ModeratorProducer():
         for col in categorical_cols:
             synthetic_df[col] = generate_categorical(df, col, num_samples)
         
-        numerical_cols = ['Productivity', 'Utilisation %', 'handling time', ' accuracy ']
+        numerical_cols = ['Productivity', 'Utilisation %', 'handling time', 'accuracy']
         for col in numerical_cols:
             synthetic_df[col] = generate_numerical(df, col, num_samples)
         
