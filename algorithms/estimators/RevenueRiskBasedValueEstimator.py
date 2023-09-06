@@ -1,4 +1,4 @@
-from objects import Advertisement as ad
+from entities import Advertisement as ad
 
 
 class RevenueRiskBasedValueEstimator:
