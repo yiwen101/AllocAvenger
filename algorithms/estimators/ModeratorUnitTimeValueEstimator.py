@@ -24,7 +24,14 @@ class ModeratorUnitTimeValueEstimator:
     def estimateDuration(self, mod, ad):
         return self.durationEstimator.estimate(mod, ad)
 
+class naiveAccuracyEstimator:
+    def estimate(self, mod, ad):
+        return mod.properties["accuracy"]
 
+class naiveDurationEstimator:
+    def estimate(self, mod, ad):
+        return ad.properties["baseline_st"] * 5
+    
 def moderatorUnitTimeValueEstimatorTest():
     class mockDurationEstimator:
         def estimate(self, mod, ad):

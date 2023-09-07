@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from objects import Advertisement as ad
+from entities import Advertisement as ad
 
 
 class AdvertisementManager:

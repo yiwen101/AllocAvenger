@@ -1,34 +1,27 @@
-import StrToPropertiesParser as strPar
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+import raw_parsers.ExcelParser as eParser
 
 
 class ModeratorPropertiesParser:
     def __init__(self):
-        self.baseParser = strPar.StrToPropertiesParser()
-
+        self.baseParser = eParser.ExcelToPropertiesParser()
+        self.ans = None
+    
+    # please call this from the root direcotry of the project
     # make sure the data input is valid, entry with empty values are either rewritten as null value of the type or discarded.
-    def parse(self, moderatorStr):
-        properties = self.baseParser.parse(moderatorStr)
-        properties["moderator"] = int(properties["moderator"])
-        # this part, the one working on dealing iwth the input data should do extra work
-        properties["market"] = properties["market"].split("&")
-        # not sure why these two are in capital letters in the doc
-        properties["Productivity"] = float(properties["Productivity"])
-        properties["Utilisation"] = float(properties["Utilisation"])
-        properties["handling time"] = float(properties["handling time"])
-        properties["accuracy"] = float(properties["accuracy"])
-        return properties
+    def parse(self):
+        if self.ans is not None:
+            return self.ans
+        propertiess = self.baseParser.parse("input/raw_data.xlsx","moderator dimension (dim table)")
+        ans = []
+        for properties in propertiess:
+            if not isinstance(properties["Productivity"], float) or not isinstance(properties["Utilisation %"], float) or not isinstance(properties["handling time"], int) or not isinstance(properties["accuracy"], float):
+                continue
+            ans.append(properties) 
+        self.ans = ans  
+        return ans
 
-
-def moderatorPropertiesParserTest():
-    parser = ModeratorPropertiesParser()
-    testStr = "moderator//1689841547143170::market//SA&OM&BH&QA&JO::Productivity//286.2176::Utilisation//0.8124::handling time//123549::accuracy//0.99"
-    property = parser.parse(testStr)
-    ok = strPar.StrToPropertiesParser.propertyAssertHelper(
-        ["moderator", "market", "Productivity", "Utilisation", "handling time",
-         "accuracy"],
-        [1689841547143170, ["SA", "OM", "BH", "QA", "JO"], 286.2176, 0.8124,
-         123549, 0.99], property)
-    if ok:
-        print("moderatorPropertiesParserTest passed")
-    else:
-        print("moderatorPropertiesParserTest failed")
+#parser = ModeratorPropertiesParser()
+#print(parser.parse()[0]["accuracy"])

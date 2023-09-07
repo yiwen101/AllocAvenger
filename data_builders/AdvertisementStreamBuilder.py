@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from objects.Advertisement import Advertisement
+from entities.Advertisement import Advertisement
 from AdvertisementProducer import *
 import random
 
@@ -40,4 +40,5 @@ class AdvertisementStreamBuilder:
         selected_objects = random.sample(ads_list, num)
         ads_stream.append(selected_objects)
     return ads_stream
-    
+
+
