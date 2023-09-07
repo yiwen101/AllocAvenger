@@ -1,17 +1,14 @@
+Mean Productivity=366.48
+Mean Utilisation %=0.723
+Mean Handling Time=96816.03
+Mean Accuracy=0.854
+
 Distributions：
 Productivity appears to be right-skewed, with most values clustered near the lower end.
 Utilisation % is also right-skewed, with most values near zero.
 handling time shows a similar right-skewed distribution.
 accuracy is left-skewed, with most values near 1.
 
-
 Pairwise Relationships:
 There doesn't appear to be a strong linear relationship between any pairs of numerical variables.
 Most of the scatter plots show a clustering of points at lower values for both axes.
-
-moderator: the most frequent being "1738944561390594".
-market: ["US", "CA"] being the most frequent.
-Productivity: Varies between 0 and about 972.38, with a mean around 366.88.
-Utilisation %: Varies between approximately 0.08 and 1.30, with a mean around 0.73.
-handling time: Varies between 0 and about 1,166,845, with a mean around 200,464.
-accuracy: Varies between approximately 0.44 and 1.27, with a mean around 0.86.
