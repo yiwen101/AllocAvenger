@@ -1,7 +1,46 @@
-Mean Productivity=366.48
-Mean Utilisation %=0.723
-Mean Handling Time=96816.03
-Mean Accuracy=0.854
+Productivity
+Count: 1285
+Mean: 366.48
+Standard Deviation: 178.66
+Min: 0.54
+25th Percentile (Q1): 247.03
+Median (50th Percentile, Q2): 343.59
+75th Percentile (Q3): 461.17
+Max: 1323.36
+Mode: 213.73
+
+Utilisation %
+Count: 1285
+Mean: 0.723
+Standard Deviation: 0.197
+Min: 0.000
+25th Percentile (Q1): 0.655
+Median (50th Percentile, Q2): 0.779
+75th Percentile (Q3): 0.849
+Max: 1.287
+Mode: 0.000
+
+Handling Time
+Count: 1414
+Mean: 96816.03
+Standard Deviation: 357211.0
+Min: 0
+25th Percentile (Q1): 49137
+Median (50th Percentile, Q2): 81351
+75th Percentile (Q3): 100052.5
+Max: 9443621
+Mode: 0
+
+Accuracy
+Count: 1403
+Mean: 0.854
+Standard Deviation: 0.122
+Min: 0.250
+25th Percentile (Q1): 0.797
+Median (50th Percentile, Q2): 0.893
+75th Percentile (Q3): 0.939
+Max: 1.000
+Mode: 1.000
 
 Distributions：
 Productivity appears to be right-skewed, with most values clustered near the lower end.
