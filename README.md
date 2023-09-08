@@ -53,8 +53,8 @@ Due to the ambiguous nature of the provided data and problem statement, we faced
 
 ## How to Run
 
-*Instructions on setting up the environment and running the project will be provided here.*
-
+Please refer to `test.py` on how to run the simulation with our algorithm.
+ 
 ## Future Scope
 
 Our next steps include:
