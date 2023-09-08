@@ -16,7 +16,7 @@ class Advertisement:
         self.isDone = True
 
     def updateLoss(self):
-        self.accumulatedLoss += self.value
+        self.accumulatedLoss += self.value / 3000
 
     def getLoss(self):
         return self.accumulatedLoss

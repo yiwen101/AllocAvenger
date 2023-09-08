@@ -1,6 +1,6 @@
 class Moderator:
-    def __init__(self, Properties):
-        self.Properties = Properties
+    def __init__(self, properties):
+        self.properties = properties
         self.tasks = []
         self.tasksEstimatedTime = []
         self.totalTaskRemainTime = 0
@@ -22,7 +22,7 @@ class Moderator:
             self.effectiveWorkTime += 1
             self.tasksEstimatedTime[0] -= 1
             self.totalTaskRemainTime -= 1
-            if (self.tasksEstimatedTime[0] == 0):
+            if (self.tasksEstimatedTime[0] <= 0):
                 self.tasks.pop(0).done()
                 self.tasksEstimatedTime.pop(0)
 

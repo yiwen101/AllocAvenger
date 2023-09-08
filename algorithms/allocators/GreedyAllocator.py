@@ -1,6 +1,7 @@
 class GreedyAllocator:
     def __init__(self, unitTimeValueEstimator):
         self.unitTimeValueEstimator = unitTimeValueEstimator
+        self.inaccuracyLoss = 0
 
     def allocate(self, ads, mods):
         ads.sort(key=lambda ad: ad.value)
@@ -12,6 +13,10 @@ class GreedyAllocator:
                 mod: ad.value/(self.unitTimeValueEstimator.estimateDuration(mod, ad) + mod.totalTaskRemainTime))
             mod.assign(ad,
                        self.unitTimeValueEstimator.estimateDuration(mod, ad))
+            self.inaccuracyLoss += self.unitTimeValueEstimator.estimateInaccuracyLoss(mod, ad)
+
+    def getInaccuracyLoss(self):
+        return self.inaccuracyLoss
 
 
 def greedyAllocatorTest():

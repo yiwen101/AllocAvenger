@@ -15,23 +15,13 @@ class AdvertisementManager:
         self.totalLost = 0
 
     def update(self):
-        toPop = []
+
+        self.incompletedAds = {k: v for k, v in self.incompletedAds.items() if not v.isDone}
+
         for ad in self.incompletedAds.values():
-            if ad.isDone:
-                toPop.append(ad.id)
-            else:
-                ad.updateLoss()
+            ad.updateLoss()
 
-        for id in toPop:
-            self.incompletedAds.pop(id)
-
-        toPop = []
-
-        for ad in self.unAssignedAds.values():
-            if ad.isAssigned:
-                toPop.append(ad.id)
-        for id in toPop:
-            self.unAssignedAds.pop(id)
+        self.unAssignedAds = {k: v for k, v in self.unAssignedAds.items() if not v.isAssigned}
 
         # get new incoming flow of ads
         if self.timeRound < len(self.advertisementStream):
@@ -44,10 +34,7 @@ class AdvertisementManager:
         self.timeRound += 1
 
     def getUnassignedAds(self):
-        ans = []
-        for ad in self.unAssignedAds.values():
-            ans.append(ad)
-        return ans
+        return list(self.unAssignedAds.values())
 
     def allDone(self):
         return len(self.incompletedAds) == 0 and self.timeRound > 0

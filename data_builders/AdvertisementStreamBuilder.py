@@ -25,7 +25,6 @@ class AdvertisementStreamBuilder:
         std_dev = mean / 5
         num = int(np.random.normal(mean, std_dev))
         num = max(0, min(num, len(ads_list)))
-        print(num)
         selected_objects = random.sample(ads_list, num)
         ads_stream.append(selected_objects)
     return ads_stream

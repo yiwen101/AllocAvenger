@@ -22,7 +22,7 @@ class ModeratorManager:
         totalWorkCount = 0
         for moderator in self.moderators:
             totalWorkTime += moderator.totalWorkTime
-            totalWorkCount += moderator.workcount
+            totalWorkCount += moderator.effectiveWorkTime
         return totalWorkCount / totalWorkTime
 
 

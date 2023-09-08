@@ -11,22 +11,13 @@ class RevenueRiskBasedValueEstimator:
         # set the revenue factor of ad to revenue
         revenue = self.revenueEstimator.estimate(ad)
         risk = self.riskEstimator.estimate(ad)
-        return (1 - risk) * revenue - risk * revenue * self.punishingFactor
+        return (1 - risk) * revenue
 
     def estimateRevenue(self, ad):
         return self.revenueEstimator.estimate(ad)
 
     def estimateRisk(self, ad):
         return self.riskEstimator.estimate(ad)
-
-class naiveRevenueEstimator:
-    def estimate(self, ad):
-        return ad.properties["avg_ad_revenue"]
-
-# could implement, database, for example, to check for the history of the poster?  
-class naiveRiskEstimator:
-    def estimate(self, ad):
-        return min(0.05 + ad.properties["punish_num"] * 0.05, 0.8)
 
 def revenueRiskBasedValueEstimatorTest():
     class mockRevenueEstimator:

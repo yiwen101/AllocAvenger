@@ -1,13 +1,19 @@
 class RandomAllocator:
     def __init__(self, unitTimeValueEstimator):
-        pass
+        self.unitTimeValueEstimator = unitTimeValueEstimator
+        self.inaccuracyLoss = 0
 
     def allocate(self, ads, mods):
         mods = list(filter(lambda mod: mod.isIdle(), mods))
         while (0 < len(ads) and 0 < len(mods)):
             ad = ads.pop()
             mod = mods.pop()
-            mod.assign(ad)
+            mod.assign(ad, self.unitTimeValueEstimator.estimateDuration(mod, ad))
+            self.inaccuracyLoss += self.unitTimeValueEstimator.estimateInaccuracyLoss(
+                mod, ad)
+
+    def getInaccuracyLoss(self):
+        return self.inaccuracyLoss
 
 
 def randomAllocatorTest():

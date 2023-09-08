@@ -15,6 +15,8 @@ def simulate(adManager: AdvertisementManager, modManager: ModeratorManager, allo
 
         modManager.work()
 
-    loss = adManager.getLoss()
+    waitLoss = adManager.getLoss()
+    inaccuracyLoss = allocator.getInaccuracyLoss()
+    loss = waitLoss + inaccuracyLoss
     utilRate = modManager.getUtilRate()
     return loss, utilRate
