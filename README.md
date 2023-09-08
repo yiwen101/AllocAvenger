@@ -32,6 +32,16 @@ Both of these managers work as the primary drivers for the simulation, interacti
 
 At the moment, we're in the process of testing and refining algorithms to allocate ads to moderators. We've implemented two naive, greedy-based algorithms and are researching the application of queueing theory to develop more efficient solutions.
 
+## Updates as of 22:30, Sep 8: New Features and Progress
+
+**1. Simple Testing Updates**:
+- We've successfully enabled the functionality for `simple_test()`. Please note that filtering moderators by country is yet to be implemented.
+
+**2. Loss Estimation**:
+- A significant addition has been made with the introduction of `ModeratorUnitTimeValueEstimator`. This helps in estimating the loss due to inaccurate moderation.
+- This estimated value contributes to the total loss calculation.
+- The allocator has been designed to store this loss information, especially since it's aware of which advertisement job has been assigned to which moderator.
+
 ### Challenges Faced
 
 Due to the ambiguous nature of the provided data and problem statement, we faced a few challenges:
@@ -43,8 +53,8 @@ Due to the ambiguous nature of the provided data and problem statement, we faced
 
 ## How to Run
 
-*Instructions on setting up the environment and running the project will be provided here.*
-
+Please refer to `test.py` on how to run the simulation with our algorithm.
+ 
 ## Future Scope
 
 Our next steps include:
