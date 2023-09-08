@@ -6,20 +6,29 @@ class Moderator:
         self.totalTaskRemainTime = 0
         self.effectiveWorkTime = 0
         self.totalWorkTime = 0
+        self.isWorking = True
 
     def isIdle(self):
-        return len(self.tasks) == 0
+        return self.isWorking and len(self.tasks) == 0
 
     def assign(self, advertisement, estimatedTime):
+        # if already exceeded work time, refuse task
+        if self.totalWorkTime + estimatedTime > self.properties["Productivity"] * 4:
+            return False
         advertisement.assign()
         self.tasks.append(advertisement)
         self.tasksEstimatedTime.append(estimatedTime)
         self.totalTaskRemainTime += estimatedTime
+        self.totalWorkTime += estimatedTime
+        self.effectiveWorkTime += estimatedTime
+        return True
 
     def work(self):
-        self.totalWorkTime += 1
-        if (not self.isIdle()):
-            self.effectiveWorkTime += 1
+        if self.totalWorkTime > self.properties["Productivity"] * 4:
+            self.isWorking = False
+        if self.isIdle():
+            self.totalWorkTime += 1
+        elif self.isWorking:
             self.tasksEstimatedTime[0] -= 1
             self.totalTaskRemainTime -= 1
             if (self.tasksEstimatedTime[0] <= 0):

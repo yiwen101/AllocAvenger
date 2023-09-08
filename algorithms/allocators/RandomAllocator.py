@@ -4,10 +4,29 @@ class RandomAllocator:
         self.inaccuracyLoss = 0
 
     def allocate(self, ads, mods):
-        mods = list(filter(lambda mod: mod.isIdle(), mods))
-        while (0 < len(ads) and 0 < len(mods)):
-            ad = ads.pop()
-            mod = mods.pop()
+        copyAds = ads.copy()
+        while (0 < len(copyAds) and 0 < len(mods)):
+            ad = copyAds.pop()
+            # filter for market
+            matchingMods = [mod for mod in mods if
+                            ad.properties["delivery_country"] in mod.properties[
+                                "market"]]
+
+            # if no working and matching mod, reject ad
+            if not matchingMods:
+                ad.assign()
+                ad.done()
+                ads.remove(ad)
+                continue
+
+            matchingMods = [mod for mod in matchingMods if mod.isIdle()]
+
+            # if no idle and matching mod, wait
+            if not matchingMods:
+                continue
+
+            mod = matchingMods.pop()
+            ads.remove(ad)
             mod.assign(ad, self.unitTimeValueEstimator.estimateDuration(mod, ad))
             self.inaccuracyLoss += self.unitTimeValueEstimator.estimateInaccuracyLoss(
                 mod, ad)

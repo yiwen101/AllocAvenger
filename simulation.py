@@ -6,7 +6,8 @@ from managers.ModeratorManager import *
 
 # simulator
 def simulate(adManager: AdvertisementManager, modManager: ModeratorManager, allocator):
-    while (not adManager.allDone()):
+    timestep = 0
+    while (modManager.getModerators() and not adManager.allDone()):
         # start of round n
         adManager.update()
 
@@ -14,9 +15,11 @@ def simulate(adManager: AdvertisementManager, modManager: ModeratorManager, allo
                            modManager.getModerators())
 
         modManager.work()
+        timestep += 1
+        print(timestep)
 
     waitLoss = adManager.getLoss()
     inaccuracyLoss = allocator.getInaccuracyLoss()
     loss = waitLoss + inaccuracyLoss
     utilRate = modManager.getUtilRate()
-    return loss, utilRate
+    return loss, utilRate, timestep

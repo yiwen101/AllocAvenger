@@ -5,17 +5,20 @@ from entities import Moderator as mod
 
 
 class ModeratorManager:
-    moderators = []
 
     def __init__(self, moderators):
         self.moderators = moderators
+        self.workingModerators = moderators.copy()
 
     def getModerators(self):
-        return self.moderators
+        return self.workingModerators
 
     def work(self):
-        for moderator in self.moderators:
-            moderator.work()
+        for moderator in self.workingModerators:
+            if not moderator.isWorking:
+                self.workingModerators.remove(moderator)
+            else:
+                moderator.work()
 
     def getUtilRate(self):
         totalWorkTime = 0

@@ -8,12 +8,40 @@ class GreedyAllocator:
         while (0 < len(ads)):
             # most valuable ad
             ad = ads.pop()
+
+            # filter for market
+            matchingMods = [mod for mod in mods if ad.properties["delivery_country"] in mod.properties["market"]]
+
+            # if no suitable moderator, reject ad
+            if not matchingMods:
+                ad.assign()
+                ad.done()
+                continue
+
             # assign to the moderator with the highest value per unit time even after accounting for the time it takes to finish the current tasks
-            mod = mod = max(mods, key=lambda
-                mod: ad.value/(self.unitTimeValueEstimator.estimateDuration(mod, ad) + mod.totalTaskRemainTime))
-            mod.assign(ad,
-                       self.unitTimeValueEstimator.estimateDuration(mod, ad))
-            self.inaccuracyLoss += self.unitTimeValueEstimator.estimateInaccuracyLoss(mod, ad)
+            successfulAssignment = False
+
+            mod = max(matchingMods, key=lambda
+                mod: ad.value / (
+                    self.unitTimeValueEstimator.estimateDuration(mod,
+                                                                 ad) + mod.totalTaskRemainTime))
+            while not successfulAssignment:
+                # if no possible assignment, reject ad
+                if not matchingMods:
+                    ad.assign()
+                    ad.done()
+                    break
+                mod = max(matchingMods, key=lambda
+                    mod: ad.value / (
+                        self.unitTimeValueEstimator.estimateDuration(mod,
+                                                                     ad) + mod.totalTaskRemainTime))
+                successfulAssignment = mod.assign(ad,
+                           self.unitTimeValueEstimator.estimateDuration(mod, ad))
+                matchingMods.remove(mod)
+
+            # if assigned, update loss
+            if successfulAssignment:
+                self.inaccuracyLoss += self.unitTimeValueEstimator.estimateInaccuracyLoss(mod, ad)
 
     def getInaccuracyLoss(self):
         return self.inaccuracyLoss

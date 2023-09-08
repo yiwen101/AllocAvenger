@@ -4,15 +4,33 @@ class GreedyIdleOnlyAllocator:
         self.inaccuracyLoss = 0
 
     def allocate(self, ads, mods):
-        mods = list(filter(lambda mod: mod.isIdle(), mods))
         ads.sort(key=lambda ad: ad.value)
-
-        while (0 < len(ads) and 0 < len(mods)):
+        copyAds = ads.copy()
+        while (0 < len(copyAds) and 0 < len(mods)):
             # most valuable ad
-            ad = ads.pop()
-            mod = mod = max(mods, key=lambda
+            ad = copyAds.pop()
+            # filter for market
+            matchingMods = [mod for mod in mods if
+                            ad.properties["delivery_country"] in mod.properties[
+                                "market"]]
+
+            # if no working and matching mod, reject ad
+            if not matchingMods:
+                ad.assign()
+                ad.done()
+                ads.remove(ad)
+                continue
+
+            matchingMods = [mod for mod in matchingMods if mod.isIdle()]
+
+            # if no matching mod is idle, wait
+            if not matchingMods:
+                continue
+
+            mod = max(matchingMods, key=lambda
                 mod: self.unitTimeValueEstimator.estimate(mod, ad))
-            mods.remove(mod)
+            matchingMods.remove(mod)
+            ads.remove(ad)
             mod.assign(ad,
                        self.unitTimeValueEstimator.estimateDuration(mod, ad))
             self.inaccuracyLoss += self.unitTimeValueEstimator.estimateInaccuracyLoss(
