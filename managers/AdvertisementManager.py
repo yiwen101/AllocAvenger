@@ -96,4 +96,4 @@ def AdvertismentManagerTest():
         print("AdvertismentManagerTest failed")
 
 
-AdvertismentManagerTest()
+# AdvertismentManagerTest()

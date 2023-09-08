@@ -10,9 +10,7 @@ import json
 from sklearn.preprocessing import StandardScaler
 from numpy.random import multivariate_normal
 
-from raw_parsers import AdPropertiesParser as adParser
-
-class AdvertisementProducer():
+class AdvertisementPropertiesProducer():
     def __init__(self):
         pass
 
@@ -72,39 +70,10 @@ class AdvertisementProducer():
         for col in ['latest_punish_begin_date', 'start_time']:
             synthetic_df[col] = pd.to_datetime(synthetic_df[col], unit='ms')
             
-        return synthetic_df
-
-
-class AdvertisementSampler:
-    def __init__(self, valueEstimator):
-        self.ad_properties_array = adParser.AdPropertiesParser().parse()
-        self.valueEstimator = valueEstimator
-    def produce(self, num):
-        sampled = random.sample(self.ad_properties_array, num)
-        ans = []
-        for properties in sampled:
-            ans.append(Advertisement(properties, self.valueEstimator))
-        return ans            
-
-def AdvertisementSamplerTest():
-    class MockEstimator:
-        def __init__(self):
-            pass
-        def estimate(self, ad):
-            return 1
-        def estimateRevenue(self, ad):
-            return 1
-        def estimateRisk(self, ad):
-            return 1
-    s = AdvertisementSampler(MockEstimator())
-    ok = isinstance(s.produce(10)[0], Advertisement)
-    if ok:
-        print("AdvertisementSamplerTest passed")
-    else:
-        print("AdvertisementSamplerTest failed")
+        return synthetic_df.to_dict(orient='records')
 
 def advertisementBuilderTest():
-    builder = AdvertisementProducer()
+    builder = AdvertisementPropertiesProducer()
     ok = len(builder.generate_data(20)) == 20
     if ok:
         print("advertisementBuilderTest passed")

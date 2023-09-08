@@ -2,19 +2,20 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from entities.Advertisement import Advertisement
-from AdvertisementProducer import *
+from data_builders.AdvertisementPropertiesProducer import *
+from raw_parsers.AdPropertiesParser import *
+from typing import Union
 import random
 
 class AdvertisementStreamBuilder:
-  def __init__(self, producer: AdvertisementProducer, estimator):
+  def __init__(self, producer: Union[AdPropertiesParser, AdvertisementPropertiesProducer], estimator):
     self.producer = producer
     self.estimator = estimator
     
   def get_ads_list(self, num):
-    pd_ads = self.producer.generate_data(num)
-    dic_list = pd_ads.to_dict(orient='records')
-    ads_list = list(map(lambda x: Advertisement(x, self.estimator), dic_list))
-    return ads_list
+    ads_dic = self.producer.generate_data(num)
+    ads = list(map(lambda x: Advertisement(x, self.estimator), ads_dic))
+    return ads
   
   def build_normal_distribution_stream(self, num_ads, num_time_steps):
     ads_list = self.get_ads_list(num_ads)

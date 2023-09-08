@@ -1,15 +1,12 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from entities.Moderator import Moderator
-
-from raw_parsers.ModeratorPropertiesParser import ModeratorPropertiesParser
 
 import json
 import numpy as np
 import pandas as pd
 
-class ModeratorProducer():
+class ModeratorPropertiesProducer():
     def __init__(self):
         pass
     
@@ -47,34 +44,11 @@ class ModeratorProducer():
         for col in numerical_cols:
             synthetic_df[col] = generate_numerical(df, col, num_samples)
         
-        synthetic_df[numerical_cols] = synthetic_df[numerical_cols].apply(lambda x: np.maximum(0, x))    
-        return synthetic_df
+        synthetic_df[numerical_cols] = synthetic_df[numerical_cols].apply(lambda x: np.maximum(0, x))  
+        return synthetic_df.to_dict(orient='records')
 
-class ModeratorSampler:
-    def __init__(self):
-        self.propertiesProducer = ModeratorPropertiesParser
-        self.ans = None
-    
-    def produce(self, num_samples):
-        if self.ans is not None:
-            return self.ans
-        properties = self.propertiesProducer().parse()
-        ans = []
-        for p in properties:
-            ans.append(Moderator(p))
-        self.ans = ans
-        return ans
-
-def moderatorProducerTest():
-    s = ModeratorSampler().produce(10)
-    ok = isinstance(s[0], Moderator)
-    if ok:
-        print("moderatorProducerTest passed")
-    else:
-        print("moderatorProducerTest failed")
-moderatorProducerTest()
-def moderatorBuilderTest():
-    builder = ModeratorProducer()
+def moderatorPropertiesProducerTest():
+    builder = ModeratorPropertiesProducer()
     ok = len(builder.generate_data(20)) == 20
     if ok:
         print("moderatorBuilderTest passed")
