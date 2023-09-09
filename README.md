@@ -42,6 +42,11 @@ At the moment, we're in the process of testing and refining algorithms to alloca
 - This estimated value contributes to the total loss calculation.
 - The allocator has been designed to store this loss information, especially since it's aware of which advertisement job has been assigned to which moderator.
 
+## Updates as of 00:30, Sep 9: New Features and Progress
+
+**1. Allocating Algorithm Enhanced**:
+- Moderator's work limit and market match works as intended
+
 ### Challenges Faced
 
 Due to the ambiguous nature of the provided data and problem statement, we faced a few challenges:
@@ -54,7 +59,7 @@ Due to the ambiguous nature of the provided data and problem statement, we faced
 ## How to Run
 
 Please refer to `test.py` on how to run the simulation with our algorithm.
- 
+
 ## Future Scope
 
 Our next steps include:

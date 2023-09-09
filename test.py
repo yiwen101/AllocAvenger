@@ -29,7 +29,6 @@ def simple_test():
   ad_manager = AdvertisementManager(ad_stream_builder.build_normal_distribution_stream(10000, 250))
   mod_manager = ModeratorManager(mod_list_builder.build_random(350))
   matchEstimator = ModeratorUnitTimeValueEstimator(durationEstimator, accuracyEstimator, punishingFactor)
-  print(simulate(ad_manager, mod_manager, RandomAllocator(matchEstimator)))
-
+  print(simulateExtended(ad_manager, mod_manager, RandomAllocator(matchEstimator)))
   
 simple_test()
