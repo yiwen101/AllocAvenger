@@ -4,6 +4,7 @@ from algorithms.estimators.RevenueRiskBasedValueEstimator import *
 from algorithms.allocators.GreedyAllocator import *
 from algorithms.allocators.GreedyIdleOnlyAllocator import *
 from algorithms.allocators.RandomAllocator import *
+from algorithms.allocators.ModelBasedGreedyAllocator import *
 from data_builders.AdvertisementPropertiesProducer import *
 from data_builders.ModeratorPropertiesProducer import *
 from data_builders.AdvertisementStreamBuilder import *
@@ -25,7 +26,7 @@ def main():
     parser.add_argument("-v", "--volume", type=float, help="advertisement volume (ratio to the original)", default=1)
     parser.add_argument("-p", "--punishment_factor", type=float, help="ratio of punishment for an erroneously acceptted ad", default=2)
     parser.add_argument("-s", "--source", type=str, help="source of advertisement data: raw | synthetic", default="raw")
-    parser.add_argument("-a", "--algorithm", type=str, help="algorithm: random | greedy_idle | greedy | ", default="greedy")
+    parser.add_argument("-a", "--algorithm", type=str, help="algorithm: random | greedy_idle | greedy | greedy_farseeing", default="greedy")
     parser.add_argument("-f", "--file_name", type=str, help="output file name", default="results_even_1_2_raw_greedy.json")
 
     args = parser.parse_args()
@@ -51,6 +52,8 @@ def main():
       allocator = RandomAllocator(matchEstimator)
     elif args.algorithm == "greedy_idle":
       allocator = GreedyIdleOnlyAllocator(matchEstimator)
+    elif args.algorithm == "greedy_farseeing":
+      allocator = ModelBasedGreedyAllocator(matchEstimator)
     results = simulateExtended(ad_manager, mod_manager, allocator)
     
     results_dir = 'simulation_results'
