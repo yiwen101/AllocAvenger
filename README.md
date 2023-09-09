@@ -14,7 +14,7 @@ aim of our project is to:
   of moderation.
 
 ## Features
-###Functional Features:
+### Functional Features:
 
 An array of Algorithms that allocate advertisement to moderators in run time by estimating their values.
 
@@ -28,7 +28,7 @@ A Simulator that combines all the components above to produce analysis of the be
 
 A Visualization component and help with the analysis of the result of simulation.
 
-###Non-Fuctional Features:
+### Non-Fuctional Features:
 Extensibility: 
 
 Our model can esily extends for adding more fields to the data in the excel. This is done by building a "properties" component which is a map of headings to values.
