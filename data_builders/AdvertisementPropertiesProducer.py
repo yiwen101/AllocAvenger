@@ -3,7 +3,6 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from entities.Advertisement import Advertisement
-import random
 import numpy as np
 import pandas as pd
 import json
@@ -15,7 +14,7 @@ class AdvertisementPropertiesProducer():
         pass
 
     def generate_data(self, num_samples):
-        json_file_path = os.path.dirname(__file__) + '\\ads_raw.json' 
+        json_file_path = os.path.join(os.path.dirname(__file__), 'ads_raw.json')
         data_list = []
         
         with open(json_file_path, 'r') as f:

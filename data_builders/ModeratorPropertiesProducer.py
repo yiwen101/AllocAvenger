@@ -11,7 +11,7 @@ class ModeratorPropertiesProducer():
         pass
     
     def generate_data(self, num_samples):
-        json_file_path = os.path.dirname(__file__) + '\\moderator_raw.json' 
+        json_file_path = os.path.join(os.path.dirname(__file__), 'moderator_raw.json')
         data_list = []
         with open(json_file_path, 'r') as f:
             for line in f:
