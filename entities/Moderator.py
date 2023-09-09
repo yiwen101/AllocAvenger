@@ -1,3 +1,5 @@
+import numpy as np
+
 class Moderator:
     def __init__(self, properties):
         self.properties = properties
@@ -18,7 +20,7 @@ class Moderator:
         advertisement.assign()
         self.tasks.append(advertisement)
         self.tasksEstimatedTime.append(estimatedTime)
-        self.totalTaskRemainTime += estimatedTime
+        self.totalTaskRemainTime += np.ceil(estimatedTime)
         self.totalWorkTime += estimatedTime
         self.effectiveWorkTime += estimatedTime
         return True
