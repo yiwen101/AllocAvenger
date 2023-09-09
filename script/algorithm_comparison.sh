@@ -1,7 +1,7 @@
 SCRIPT="test.py"
-for src in raw synthetic; do
-    FILENAME="result_even_1_1_${src}_greedy_farseeing.json"
-    echo "Running for source: $src..."
-    python $SCRIPT -d even -v 1 -p 1 -s $src -a greedy_farseeing -f $FILENAME
+for algo in random greedy_idle greedy greedy_farseeing; do
+    FILENAME="result_even_1_1_synthetic_${algo}.json"
+    echo "Running with algorithm: $algo..."
+    python $SCRIPT -d even -v 1 -p 1 -s synthetic -a $algo -f $FILENAME
 done
-echo "Source comparison completed."
+echo "Algorithm comparison completed."
