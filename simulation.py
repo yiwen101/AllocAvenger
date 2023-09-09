@@ -7,7 +7,7 @@ from managers.ModeratorManager import *
 # simulator
 def simulate(adManager: AdvertisementManager, modManager: ModeratorManager, allocator) -> (float, float, int):
     timestep = 0
-    while (modManager.getModerators() and not adManager.allDone()):
+    while timestep < len(adManager.advertisementStream) and modManager.getModerators() and not adManager.allDone():
         # start of round n
         adManager.update()
 
@@ -26,7 +26,7 @@ def simulate(adManager: AdvertisementManager, modManager: ModeratorManager, allo
 
 def simulateExtended(adManager: AdvertisementManager, modManager: ModeratorManager, allocator) -> (float, float, int, list):
     timestep = 0
-    while (modManager.getModerators() and not adManager.allDone()):
+    while timestep < len(adManager.advertisementStream) and modManager.getModerators() and not adManager.allDone():
         # start of round n
         adManager.update()
 

@@ -24,6 +24,19 @@ class ModeratorUnitTimeValueEstimator:
     def estimateDuration(self, mod, ad):
         return self.durationEstimator.estimate(mod, ad)
 
+    def estimateProfit(self, mod, ad):
+        risk = ad.risk
+        revenue = ad.revenue
+        accuracy = self.accuracyEstimator.estimate(mod, ad)
+        # there are four cases, when there is accurate and happy case, accurate and sad case, false negative, false positive.
+        # to consider the UnitTimeValue, consider the sum of the expected value of the four cases ajusted with probability of occurance
+        accurateAndHappyCase = (1 - risk) * accuracy * revenue
+        # accurateAndSadCase =  risk * accuracy * 0 = 0
+        # falseNegative = (1 - risk) * (1-accuracy) * 0 = 0
+        falsePositive = -1 * risk * (
+                1 - accuracy) * revenue * self.punishingFactor
+        return accurateAndHappyCase + falsePositive
+
     def estimateInaccuracyLoss(self, mod, ad):
         risk = ad.risk
         revenue = ad.revenue

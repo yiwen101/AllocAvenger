@@ -22,7 +22,7 @@ class GreedyAllocator:
             successfulAssignment = False
 
             mod = max(matchingMods, key=lambda
-                mod: ad.value / (
+                mod: self.unitTimeValueEstimator.estimateProfit(mod, ad) / (
                     self.unitTimeValueEstimator.estimateDuration(mod,
                                                                  ad) + mod.totalTaskRemainTime))
             while not successfulAssignment:
@@ -32,7 +32,7 @@ class GreedyAllocator:
                     ad.done()
                     break
                 mod = max(matchingMods, key=lambda
-                    mod: ad.value / (
+                    mod: self.unitTimeValueEstimator.estimateProfit(mod, ad) / (
                         self.unitTimeValueEstimator.estimateDuration(mod,
                                                                      ad) + mod.totalTaskRemainTime))
                 successfulAssignment = mod.assign(ad,
