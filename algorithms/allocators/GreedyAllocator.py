@@ -12,7 +12,7 @@ class GreedyAllocator:
             ad = ads.pop()
 
             # filter for mod in same market
-            matchingMods = [mod for mod in mods if ad.properties["delivery_country"] in mod.properties["market"]]
+            matchingMods = [mod for mod in mods if ad.properties["delivery_country"] in mod.properties["market"] and not mod.willExceedWorkload(self.unitTimeValueEstimator.estimateDuration(mod, ad))]
 
             # if no suitable moderator, reject ad
             if not matchingMods:
@@ -26,27 +26,8 @@ class GreedyAllocator:
                     self.unitTimeValueEstimator.estimateDuration(mod,
                                                                  ad) + mod.totalTaskRemainTime))
 
-            # it could be that this mod already has too many ads that the mod has used up
-            # their total work time, so we try until we can successfully assign
-            successfulAssignment = False
-            while not successfulAssignment:
-                # if no possible assignment, reject ad
-                if not matchingMods:
-                    ad.assign()
-                    ad.done()
-                    break
-                mod = max(matchingMods, key=lambda
-                    mod: self.unitTimeValueEstimator.estimateProfit(mod, ad) / (
-                        self.unitTimeValueEstimator.estimateDuration(mod,
-                                                                     ad) + mod.totalTaskRemainTime))
-                # try giving to the next best mod
-                successfulAssignment = mod.assign(ad,
-                           self.unitTimeValueEstimator.estimateDuration(mod, ad))
-                matchingMods.remove(mod)
-
-            # if assigned, update loss
-            if successfulAssignment:
-                self.inaccuracyLoss += self.unitTimeValueEstimator.estimateInaccuracyLoss(mod, ad)
+            mod.assign(ad, self.unitTimeValueEstimator.estimateDuration(mod, ad))
+            self.inaccuracyLoss += self.unitTimeValueEstimator.estimateInaccuracyLoss(mod, ad)
 
     def getInaccuracyLoss(self):
         return self.inaccuracyLoss

@@ -14,9 +14,12 @@ class Moderator:
     def isIdle(self):
         return self.isWorking and len(self.tasks) == 0
 
+    def willExceedWorkload(self, taskTime):
+        return taskTime + self.totalWorkTime > self.properties["Productivity"] * 4
+    
     def assign(self, advertisement, estimatedTime):
         # if already exceeded work time, refuse task
-        if self.totalWorkTime + estimatedTime > self.properties["Productivity"] * 4:
+        if self.willExceedWorkload(estimatedTime):
             return False
         advertisement.assign()
         self.tasks.append(advertisement)
@@ -27,7 +30,7 @@ class Moderator:
         return True
 
     def work(self):
-        if self.totalWorkTime > self.properties["Productivity"] * 4:
+        if self.willExceedWorkload(0):
             self.isWorking = False
         if self.isIdle():
             self.totalWorkTime += 1

@@ -20,7 +20,7 @@ class ModelBasedGreedyAllocator:
             ad = copyAds.pop()
 
             # filter for mod in same market
-            matchingMods = [mod for mod in mods if ad.properties["delivery_country"] in mod.properties["market"]]
+            matchingMods = [mod for mod in mods if ad.properties["delivery_country"] in mod.properties["market"] and not mod.willExceedWorkload(plannedQueueingAdsDurationPerMod[mod.id] + self.unitTimeValueEstimator.estimateDuration(mod, ad))]
 
             # if no suitable moderator, reject ad
             if not matchingMods:
