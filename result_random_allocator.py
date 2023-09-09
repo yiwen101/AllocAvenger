@@ -27,7 +27,7 @@ def quick_start():
     punishingFactor = 2
     ad_stream_builder = AdvertisementStreamBuilder(AdPropertiesParser(), RevenueRiskBasedValueEstimator(revenueEstimator, riskEstimator, punishingFactor))
     mod_list_builder = ModeratorListBuilder(ModeratorPropertiesParser())
-    ad_manager = AdvertisementManager(ad_stream_builder.build_normal_distribution_stream(10000, 250))
+    ad_manager = AdvertisementManager(ad_stream_builder.build_normal_distribution_stream(1440, 250))
     mod_manager = ModeratorManager(mod_list_builder.build_random(350))
     matchEstimator = ModeratorUnitTimeValueEstimator(durationEstimator, accuracyEstimator, punishingFactor)
     results = simulateExtended(ad_manager, mod_manager, RandomAllocator(matchEstimator))
