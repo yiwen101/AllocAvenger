@@ -38,18 +38,35 @@ Our simulation can also easily extends for other value estimation and advertisem
 Robuestness: we did extensive testing to ensure the robustness of our porject.
 
 ## Project Structure
+### Overall Architecture:
+![image](./docs/images/Architecture.png)
 
-### 1. `data_builders` Package:
+Generator is repsonsible for producing the data for the simulation. It can either read from the raw data or generate synthetic data.
 
+Algorithms is responsible for estimating the value of the advertisement and the performance of the moderators, and hence determine the allocation of the advertisements to the moderators.
+
+Simulator is responsible for simulating the allocation of the advertisements to the moderators and the performance of the moderators, and gather the data on the total loss and utilisation rate for each algorithm and inputs combination.
+
+Visualizer is responsible for visualizing the data gathered by the simulator.
+
+### Generator:
+![image](./docs/images/Generator.png)
+Parsers and builders are responsible for producing the "Properties" component for the simulation, either by reading from the raw data or by generating synthetic data.
+
+Then these properties are used to generate the advertisement and moderator objects.
+
+AdvertisementStreamBuilder will further take consideration of the distribution of the arrival pattern of advertisements and the total number of advertisement to generate the advertisement stream.
+
+Finially Generators will output advertisement manager and moderator manager objects, which are the input for the simulator.
+
+#### 1. `data_builders` Package:
 **Components**:
-
 - `AdvertisementProducer` and `ModeratorProducer`: Reads and synthesizes the entities from raw data.
 - `AdvertisementBuilder`: Generates advertisement streams, which are structured 
   as 2D arrays where the first dimension represents time units, and the second
   dimension represents ads.
 - `ModeratorBuilder`: Generates a panel of moderators.
-
-### 2. `managers` Package:
+#### 2. `managers` Package:
 
 This package primarily manages the simulations concerning advertisements and moderators. There are two core components,
 each responsible for handling data related to advertisements and moderators.
@@ -89,7 +106,14 @@ each responsible for handling data related to advertisements and moderators.
         - `moderators`: The list of all moderators.
         - `workingModerators`: The list of currently working moderators.
 
+### Algorithems:
+![image](./docs/images/Algo.png)
 ### 3. `algorithms.estimators` Package:
+
+Allocator classes are responsible for allocating ads to moderators. It is composed of a set of algorithms that utilise the estimators to determine the value of an ad and the performance of a moderator.
+
+Estimators are responsible for estimating the value of an ad and the performance of a moderator. Currently, our implementation for the value of an ad is based on the expected revenue of the ad adjusted with probability of this ad bening risky, and punished with a punishing factor. The suitability of a moderator to an advertisement is based on the expected unit time value of the moderator, which is the revenue of the ad ajusted with the probability of the moderator inaccuratedly make judgement divided by the expected duration the moderator need to spend on the advertisement.
+
 
 **Overview**:
 
