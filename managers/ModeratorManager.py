@@ -57,4 +57,4 @@ def ModeratorManagerTest():
     else:
         print("ModeratorManagerTest failed")
 
-ModeratorManagerTest()
+# ModeratorManagerTest()
