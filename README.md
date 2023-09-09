@@ -1,13 +1,17 @@
-# TikTok Hackathon: Optimize Advertisement Moderation
+# AllocAvengers: Optimize Advertisement Moderation
 
-Welcome to our project for the TikTok Hackathon! Our aim is to optimize advertisement moderation with the use of a stochastic optimization model, with specific focus on dynamically scoring and prioritizing social media advertisements for review, and ensuring these reviews are matched with the best-fitting moderator.
+Welcome to our project for the TikTok Hackathon! Our aim is to optimize advertisement moderation in a highly modularised
+system, with specific focus on dynamically scoring and prioritizing social media advertisements for review, and ensuring
+these reviews are matched with the best-fitting moderator.
 
 ## Background
 
-Digital platforms like TikTok rely heavily on advertisement reviews to ensure safe and appropriate content delivery. The aim of our project is to:
+Digital platforms like TikTok rely heavily on advertisement reviews to ensure safe and appropriate content delivery. The
+aim of our project is to:
 
-- Prioritize ad review processes based on the value and riskiness of the advertisements.
-- Assign the most suitable moderator for a particular ad review, considering factors such as language fit and industry expertise.
+- Prioritize ad review processes based on the value and risk of the advertisements.
+- Assign the most suitable moderator for a particular ad review, considering factors such as language fit and accuracy
+  of moderation.
 
 ## Project Structure
 
@@ -15,20 +19,25 @@ Digital platforms like TikTok rely heavily on advertisement reviews to ensure sa
 
 **Components**:
 
-- `AdvertisementProducer`: Reads and synthesizes advertisements from raw data.
-- `ModeratorProducer`: Reads and generates synthetic moderator data.
-- `AdvertisementBuilder` and `ModeratorBuilder`: These classes generate advertisement and moderator streams respectively, which are structured as 2D arrays where the first dimension represents time units, and the second dimension represents ads or moderators.
+- `AdvertisementProducer` and `ModeratorProducer`: Reads and synthesizes the entities from raw data.
+- `AdvertisementBuilder`: Generates advertisement streams, which are structured 
+  as 2D arrays where the first dimension represents time units, and the second
+  dimension represents ads.
+- `ModeratorBuilder`: Generates a panel of moderators.
 
 ### 2. `managers` Package:
 
-This package primarily manages the simulations concerning advertisements and moderators. There are two core components, each responsible for handling data related to advertisements and moderators.
+This package primarily manages the simulations concerning advertisements and moderators. There are two core components,
+each responsible for handling data related to advertisements and moderators.
 
 **Components**:
 
-1. **`AdvertisementManager`**: 
-    - **Purpose**: Manages advertisement data flow for simulations and tracks various advertisement metrics such as losses and completion status.
+1. **`AdvertisementManager`**:
+    - **Purpose**: Manages advertisement data flow for simulations and tracks various advertisement metrics such as
+      losses and completion status.
     - **Methods**:
-        - `update()`: Update the status of advertisements. This includes removing completed ads, updating losses, and fetching new incoming ads.
+        - `update()`: Update the status of advertisements. This includes removing completed ads, updating losses, and
+          fetching new incoming ads.
         - `getUnassignedAds()`: Returns a list of ads that have not been assigned yet.
         - `allDone()`: Checks if all the ads have been processed or not.
         - `getLoss()`: Returns the total loss accumulated from all advertisements.
@@ -47,8 +56,9 @@ This package primarily manages the simulations concerning advertisements and mod
     - **Purpose**: Manages the pool of moderators and tracks metrics related to their work, such as utilization rate.
     - **Methods**:
         - `getModerators()`: Returns the list of working moderators.
-        - `work()`: Updates the status of moderators' tasks and removes moderators who aren't working from the active list.
-        - `getUtilRate()`: Returns the average utilization rate of all moderators.
+        - `work()`: Updates the status of moderators' tasks and removes moderators who aren't working from the active
+          list.
+        - `getUtilRate()`: Returns the gross utilization rate of all moderators.
         - `getUtilRateList()`: Returns a list of individual utilization rates for each moderator.
 
     - **Attributes**:
@@ -59,7 +69,9 @@ This package primarily manages the simulations concerning advertisements and mod
 
 **Overview**:
 
-The `algorithms.estimators` package is designed to provide a set of tools to evaluate various parameters like revenue, risk, duration, and accuracy for a given ad and moderator. These parameters play a crucial role in determining the profit and value of ads. This package ensures the ads are evaluated in a holistic manner to maximize the potential profit while minimizing risks.
+The `algorithms.estimators` package is designed to provide a set of tools to evaluate various parameters like revenue,
+risk, duration, and accuracy for a given ad and moderator. This package ensures the ads are evaluated in a holistic manner to maximize the potential
+profit while minimizing risks.
 
 **Components**:
 
@@ -69,45 +81,59 @@ The `algorithms.estimators` package is designed to provide a set of tools to eva
 - `RiskEstimator`: It gives a risk score to an ad depending on the number of times an advertiser has been punished.
 
 
-- `RevenueRiskBasedValueEstimator`: Determines the estimated value of an ad by considering both the revenue and risk associated with it.
+- `RevenueRiskBasedValueEstimator`: Determines the estimated value of an ad by considering both the revenue and risk
+  associated with it.
 
-- `ModeratorUnitTimeValueEstimator`: Calculates the value generated by a moderator over a unit of time for a given ad. This is crucial to assess the performance and efficiency of moderators.
+- `ModeratorUnitTimeValueEstimator`: Calculates the value generated by a moderator over a unit of time for a given ad.
+  This is crucial to assess the performance and efficiency of moderators.
 
-
-- `DurationEstimator`: Determines the estimated duration a moderator would take to handle an ad based on their past performance and ad's baseline screening time.
+- `DurationEstimator`: Determines the estimated duration a moderator would take to handle an ad based on their past
+  performance and ad's baseline screening time.
 
 
 - `AccuracyEstimator`: Estimates the accuracy level of a moderator while handling an ad.
 
 ### 4.`algorithms.allocators` Package:
 
-This package consists of various allocator classes, each of which has its own approach to assign ads to moderators. The core aim of these allocator classes is to maximize the efficiency and effectiveness of ad allocation while minimizing inaccuracies and losses.
+This package consists of various allocator classes, each of which has its own approach to assign ads to moderators. The
+core aim of these allocator classes is to maximize the efficiency and effectiveness of ad allocation while minimizing
+inaccuracies and losses.
 
 **Components**:
 
-1. **`RandomAllocator`**: 
-    - **Purpose**: This class randomly allocates ads to moderators without considering any optimization.
+1. **`RandomAllocator`**:
+    - **Purpose**: This class randomly allocates ads to currently idle moderators without considering any optimization.
     - **Methods**:
-        - `allocate(ads, mods)`: Allocates ads to moderators. It tries to match ads and moderators based on the delivery country. If no suitable moderator is found, the ad is rejected.
+        - `allocate(ads, mods)`: Allocates ads to moderators. It tries to match ads and moderators based on the delivery
+          country. If no suitable moderator is found, the ad is rejected.
         - `getInaccuracyLoss()`: Returns the total inaccuracy loss accumulated during allocation.
 
-2. **`ModelBasedGreedyAllocator`**: 
-    - **Purpose**: Allocates ads to moderators based on a greedy approach while considering future tasks for each moderator.
+2. **`GreedyAllocator`**:
+    - **Purpose**: A greedy algorithm that allocates ads to moderators, always aiming to assign the most valuable ad to
+      the most suitable moderator.
     - **Methods**:
-        - `allocate(ads, mods)`: Allocates ads based on their value to the most suitable moderator. The allocation considers the ad's value, the moderator's current tasks, and future tasks.
+        - `allocate(ads, mods)`: It assigns the most valuable ad to the most
+          suitable moderator, no matter the moderator is idle or not.
         - `getInaccuracyLoss()`: Returns the total inaccuracy loss accumulated during allocation.
 
 3. **`GreedyIdleOnlyAllocator`**:
     - **Purpose**: This allocator uses a greedy approach but only considers currently idle moderators.
     - **Methods**:
-        - `allocate(ads, mods)`: Allocates the most valuable ads to the most suitable idle moderator based on the value estimation.
+        - `allocate(ads, mods)`: Allocates the most valuable ads to the most suitable idle moderator based on the value
+          estimation.
         - `getInaccuracyLoss()`: Returns the total inaccuracy loss accumulated during allocation.
 
-4. **`GreedyAllocator`**:
-    - **Purpose**: A greedy algorithm that allocates ads to moderators, always aiming to assign the most valuable ad to the most suitable moderator.
+4. **`ModelBasedGreedyAllocator`**:
+    - **Purpose**: It allocates the most valuable advertisements to the most suitable moderator, but does not actually carry out the assignment
+      unless the moderator is currently idle. This takes into account of better advertisements being fetched in the future.
+      Nevertheless, when allocating the less valuable advertisements, we pretend that the assignment took place, so as to
+      discourage less valuable advertisements from overcrowding excellent moderators.
     - **Methods**:
-        - `allocate(ads, mods)`: Like the `ModelBasedGreedyAllocator`, it assigns the most valuable ad to the most suitable moderator. However, it doesn't consider future tasks and keeps trying until a successful assignment or all options are exhausted.
+        - `allocate(ads, mods)`: Allocates ads based on their value to the most suitable moderator. The allocation
+          considers the ad's value, the moderator's current tasks, and possible future tasks.
         - `getInaccuracyLoss()`: Returns the total inaccuracy loss accumulated during allocation.
+
+
 
 ## How to Run
 
@@ -123,10 +149,15 @@ Our next steps include:
 
 ## Team
 
-- *Wang Junwu*: member of technical team
-- *Wang Yiwen*: member of technical team
-- *Wang Ziwen*: member of technical team
-- *Xu Shuyao*: member of technical team
-- *Xie Zebang*: member of technical team
+**Junwu:** A mathematics and computer science student interested in machine learning and algorithms.
 
-Feel free to explore our repository and share your feedback. Let's make the digital advertising space a safer and more efficient platform for all users!
+**Ziwen:** A hacker keen on exploring new things.
+
+**Yiwen:** Second year computer science student second majored in mathematics.
+
+**Zebang:** A second year student majored in Data Science & Analytics.
+
+**Shuyao:**  A year 2 CS major.
+
+Feel free to explore our repository and share your feedback. Let's make the digital advertising space a safer and more
+efficient platform for all users!
