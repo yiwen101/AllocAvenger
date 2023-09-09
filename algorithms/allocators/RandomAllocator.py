@@ -1,3 +1,4 @@
+# This allocator gives ads randomly to all idle mods.
 class RandomAllocator:
     def __init__(self, unitTimeValueEstimator):
         self.unitTimeValueEstimator = unitTimeValueEstimator
@@ -6,8 +7,9 @@ class RandomAllocator:
     def allocate(self, ads, mods):
         copyAds = ads.copy()
         while (0 < len(copyAds) and 0 < len(mods)):
+            # a random ad
             ad = copyAds.pop()
-            # filter for market
+            # filter for mods in same market
             matchingMods = [mod for mod in mods if
                             ad.properties["delivery_country"] in mod.properties[
                                 "market"]]
@@ -21,10 +23,11 @@ class RandomAllocator:
 
             matchingMods = [mod for mod in matchingMods if mod.isIdle()]
 
-            # if no idle and matching mod, wait
+            # if no idle and matching mod, wait till next timestep
             if not matchingMods:
                 continue
 
+            # random mod
             mod = matchingMods.pop()
             ads.remove(ad)
             mod.assign(ad, self.unitTimeValueEstimator.estimateDuration(mod, ad))

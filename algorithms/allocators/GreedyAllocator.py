@@ -1,3 +1,5 @@
+# This allocator gives the most valuable ad to best matching mod, even if
+# the mod is not idle.
 class GreedyAllocator:
     def __init__(self, unitTimeValueEstimator):
         self.unitTimeValueEstimator = unitTimeValueEstimator
@@ -9,7 +11,7 @@ class GreedyAllocator:
             # most valuable ad
             ad = ads.pop()
 
-            # filter for market
+            # filter for mod in same market
             matchingMods = [mod for mod in mods if ad.properties["delivery_country"] in mod.properties["market"]]
 
             # if no suitable moderator, reject ad
@@ -19,12 +21,14 @@ class GreedyAllocator:
                 continue
 
             # assign to the moderator with the highest value per unit time even after accounting for the time it takes to finish the current tasks
-            successfulAssignment = False
-
             mod = max(matchingMods, key=lambda
                 mod: self.unitTimeValueEstimator.estimateProfit(mod, ad) / (
                     self.unitTimeValueEstimator.estimateDuration(mod,
                                                                  ad) + mod.totalTaskRemainTime))
+
+            # it could be that this mod already has too many ads that the mod has used up
+            # their total work time, so we try until we can successfully assign
+            successfulAssignment = False
             while not successfulAssignment:
                 # if no possible assignment, reject ad
                 if not matchingMods:
@@ -35,6 +39,7 @@ class GreedyAllocator:
                     mod: self.unitTimeValueEstimator.estimateProfit(mod, ad) / (
                         self.unitTimeValueEstimator.estimateDuration(mod,
                                                                      ad) + mod.totalTaskRemainTime))
+                # try giving to the next best mod
                 successfulAssignment = mod.assign(ad,
                            self.unitTimeValueEstimator.estimateDuration(mod, ad))
                 matchingMods.remove(mod)

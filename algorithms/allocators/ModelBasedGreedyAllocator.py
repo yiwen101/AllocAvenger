@@ -1,10 +1,14 @@
-
+# This allocator tries to give the best ad to the best mod, but if the mod
+# is working and not idle, we wait.
+# However, we still pretend that we gave the job to the mod, so that the less
+# valuable ads are discouraged from crowding the best mods.
 class ModelBasedGreedyAllocator:
     def __init__(self, unitTimeValueEstimator):
         self.unitTimeValueEstimator = unitTimeValueEstimator
         self.inaccuracyLoss = 0
 
     def allocate(self, ads, mods):
+        # keeps track of "pretending to give jobs"
         plannedQueueingAdsDurationPerMod = {}
         for mod in mods:
             plannedQueueingAdsDurationPerMod[mod.id] = 0
@@ -15,7 +19,7 @@ class ModelBasedGreedyAllocator:
             # most valuable ad
             ad = copyAds.pop()
 
-            # filter for market
+            # filter for mod in same market
             matchingMods = [mod for mod in mods if ad.properties["delivery_country"] in mod.properties["market"]]
 
             # if no suitable moderator, reject ad
@@ -24,7 +28,9 @@ class ModelBasedGreedyAllocator:
                 ad.done()
                 continue
 
-            # assign to the moderator with the highest value per unit time even after accounting for the time it takes to finish the current tasks
+            # Assign to the moderator with the highest value per unit time even
+            # after accounting for the time it takes to finish the current tasks.
+            # Time to finish current tasks includes the ads we pretended to give
             mod = max(matchingMods, key=lambda
                 mod: self.unitTimeValueEstimator.estimateProfit(mod,ad) / (
                     self.unitTimeValueEstimator.estimateDuration(mod,

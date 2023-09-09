@@ -1,3 +1,4 @@
+# This allocator gives the best ad to the best, currently idle mod.
 class GreedyIdleOnlyAllocator:
     def __init__(self, unitTimeValueEstimator):
         self.unitTimeValueEstimator = unitTimeValueEstimator
@@ -9,7 +10,7 @@ class GreedyIdleOnlyAllocator:
         while (0 < len(copyAds) and 0 < len(mods)):
             # most valuable ad
             ad = copyAds.pop()
-            # filter for market
+            # filter for mod with same market
             matchingMods = [mod for mod in mods if
                             ad.properties["delivery_country"] in mod.properties[
                                 "market"]]
@@ -23,10 +24,11 @@ class GreedyIdleOnlyAllocator:
 
             matchingMods = [mod for mod in matchingMods if mod.isIdle()]
 
-            # if no matching mod is idle, wait
+            # if no matching mod is idle, wait till next round
             if not matchingMods:
                 continue
 
+            # otherwise give it to the best matching mod
             mod = max(matchingMods, key=lambda
                 mod: self.unitTimeValueEstimator.estimate(mod, ad))
             matchingMods.remove(mod)
