@@ -22,7 +22,7 @@ import argparse
 def main():
     parser = argparse.ArgumentParser(description="Options of input advertisement stream")
     parser.add_argument("-d", "--distribution", type=str, help="even | uneven", default="even")
-    parser.add_argument("-v", "--volume", type=float, help="advertisement volume (ratio to the original)", default=1)
+    parser.add_argument("-v", "--volume", type=int, help="advertisement volume (ratio to the original)", default=1)
     parser.add_argument("-p", "--punishment_factor", type=float, help="ratio of punishment for an erroneously acceptted ad", default=2)
     parser.add_argument("-s", "--source", type=str, help="source of advertisement data: raw | synthetic", default="raw")
     parser.add_argument("-a", "--algorithm", type=str, help="algorithm: random | greedy_idle | greedy", default="greedy")
