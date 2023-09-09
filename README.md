@@ -214,7 +214,7 @@ Please refer to `analysis.ipynb` for experiments details and detialed analysis o
 Our next steps include:
 
 - Deploying more advanced ads allocation algorithm.
-- More comprehensive experi
+- More comprehensive experiments and analysis.
 
 ## Team
 
