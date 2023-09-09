@@ -204,7 +204,7 @@ To run the simulation, run the file `test.py`. You may specify flags:
 
 ## Project Result
 
-### TLDR: 
+### TL;DR: 
 **Our greedy-based algorithm achieved SOTA in all rubrics include matching_loss and utilization rate.**  
 
 Please refer to `analysis.ipynb` for experiments details and detialed analysis of the different algorithms.
