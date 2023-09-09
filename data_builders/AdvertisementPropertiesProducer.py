@@ -34,6 +34,7 @@ class AdvertisementPropertiesProducer():
             mean = df[col].mean()
             std = df[col].std()
             arr = np.random.normal(mean, std, size).astype(np.float32)
+            arr = np.abs(arr)
             arr[arr == 0] = mean
             return arr
         
