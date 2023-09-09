@@ -5,3 +5,4 @@ workspace.xml
 usage.statistics.xml
 .idea/
 .DS_Store
+*.pyc
