@@ -27,6 +27,11 @@ class ModeratorManager:
             totalWorkTime += moderator.totalWorkTime
             totalWorkCount += moderator.effectiveWorkTime
         return totalWorkCount / totalWorkTime
+    def getUtilRateList(self):
+        utilRateList = []
+        for moderator in self.moderators:
+            utilRateList.append(moderator.effectiveWorkTime / moderator.totalWorkTime)
+        return utilRateList
 
 
 def ModeratorManagerTest():

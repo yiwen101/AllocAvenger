@@ -44,6 +44,12 @@ class AdvertisementManager:
         for ad in self.allAds:
             totalLoss += ad.getLoss()
         return totalLoss
+    
+    def getLossList(self):
+        lossList = []
+        for ad in self.allAds:
+            lossList.append(ad.getLoss())
+        return lossList
 
 
 def AdvertismentManagerTest():
