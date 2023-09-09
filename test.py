@@ -4,6 +4,7 @@ from algorithms.estimators.RevenueRiskBasedValueEstimator import *
 from algorithms.allocators.GreedyAllocator import *
 from algorithms.allocators.GreedyIdleOnlyAllocator import *
 from algorithms.allocators.RandomAllocator import *
+from algorithms.allocators.ModelBasedGreedyAllocator import *
 from data_builders.AdvertisementStreamBuilder import *
 from data_builders.ModeratorListBuilder import *
 from managers.AdvertisementManager import *
@@ -26,10 +27,10 @@ def simple_test():
   punishingFactor = 2
   ad_stream_builder = AdvertisementStreamBuilder(AdPropertiesParser(), RevenueRiskBasedValueEstimator(revenueEstimator, riskEstimator, punishingFactor))
   mod_list_builder = ModeratorListBuilder(ModeratorPropertiesParser())
-  ad_manager = AdvertisementManager(ad_stream_builder.build_normal_distribution_stream(10000, 250))
-  mod_manager = ModeratorManager(mod_list_builder.build_random(350))
+  ad_manager = AdvertisementManager(ad_stream_builder.build_normal_distribution_stream(1000, 25))
+  mod_manager = ModeratorManager(mod_list_builder.build_random(35))
   matchEstimator = ModeratorUnitTimeValueEstimator(durationEstimator, accuracyEstimator, punishingFactor)
-  print(simulate(ad_manager, mod_manager, RandomAllocator(matchEstimator)))
+  print(simulate(ad_manager, mod_manager, ModelBasedGreedyAllocator(matchEstimator)))
 
   
 simple_test()
