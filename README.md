@@ -4,6 +4,11 @@ Welcome to our project for the TikTok Hackathon! Our aim is to optimize advertis
 system, with specific focus on dynamically scoring and prioritizing social media advertisements for review, and ensuring
 these reviews are matched with the best-fitting moderator.
 
+<p align="center">
+  <img src="./docs/images/AlgoCompareLoss.png" width="400" />
+  <img src="./docs/images/AlgoCompareUtilAverage.png" width="400" /> 
+</p>
+
 ## Background
 
 Digital platforms like TikTok rely heavily on advertisement reviews to ensure safe and appropriate content delivery. The
@@ -36,6 +41,7 @@ Our model can esily extends for adding more fields to the data in the excel. Thi
 Our simulation can also easily extends for other value estimation and advertisement to moderator pairing, as long as they fulfill our interface.
 
 Robuestness: we did extensive testing to ensure the robustness of our porject.
+
 
 ## Project Structure
 ### Overall Architecture:
@@ -196,13 +202,16 @@ To run the simulation, run the file `test.py`. You may specify flags:
 - `-a` for allocation algorithms. Options include `random`, `greedy_idle`, `greedy` and `greedy_farseeing`. The last corresponds to ModelBasedGreedyAllocator above. Refer to the above for more details on allocators. The default is `greedy`.
 - `-f` for file name. You may specify the export file name with this flag. The default file name simply lists the parameters above.
 
+## Project Result
+
+Please refer to `analysis.ipynb` for experiments details and detialed analysis of the different algorithms.
+
 ## Future Scope
 
 Our next steps include:
 
 - Deploying more advanced ads allocation algorithm.
-- Provide quick start code or shell script.
-- Data visualization for the end result.
+- More comprehensive experi
 
 ## Team
 
