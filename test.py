@@ -25,7 +25,8 @@ def main():
     parser.add_argument("-v", "--volume", type=float, help="advertisement volume (ratio to the original)", default=1)
     parser.add_argument("-p", "--punishment_factor", type=float, help="ratio of punishment for an erroneously acceptted ad", default=2)
     parser.add_argument("-s", "--source", type=str, help="source of advertisement data: raw | synthetic", default="raw")
-    parser.add_argument("-a", "--algorithm", type=str, help="algorithm: random | greedy_idle | greedy", default="greedy")
+    parser.add_argument("-a", "--algorithm", type=str, help="algorithm: random | greedy_idle | greedy | ", default="greedy")
+    parser.add_argument("-f", "--file_name", type=str, help="output file name", default="results_even_1_2_raw_greedy.json")
 
     args = parser.parse_args()
     print(f"Advertisement stream ditribution: {args.distribution}")
@@ -55,7 +56,7 @@ def main():
     results_dir = 'simulation_results'
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
-    file_path = os.path.join(results_dir, args.algorithm + '.json')
+    file_path = os.path.join(results_dir, args.file_name)
 
     with open(file_path, 'w') as f:
         json.dump(results, f)
