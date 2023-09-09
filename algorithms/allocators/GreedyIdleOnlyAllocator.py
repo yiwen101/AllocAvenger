@@ -43,23 +43,23 @@ class GreedyIdleOnlyAllocator:
 def greedyIdleOnlyAllocatorTest():
     class mockMod:
         def __init__(self, value):
-            self.idle = True
             self.value = value
-            self.assigned = None
-
-        def isIdle(self):
-            return self.idle
+            self.totalTaskRemainTime = 0
+            self.id = None
+            self.properties = {"market": ["US", "CA"]}
 
         def assign(self, ad, duration):
-            self.idle = False
-            ad.assign()
+            self.totalTaskRemainTime += duration
             ad.assignTo(self)
+        def isIdle(self):
+            return self.totalTaskRemainTime == 0
 
     class mockAd:
         def __init__(self, value):
             self.value = value
             self.isAssigned = False
             self.assigned = None
+            self.properties = {"delivery_country": "US"}
 
         def assign(self):
             self.isAssigned = True
@@ -69,21 +69,24 @@ def greedyIdleOnlyAllocatorTest():
 
     class mockUnitTimeValueEstimator:
         def estimate(self, mod, ad):
-            return mod.value
-
+            return (mod.value + ad.value)/2
+        def estimateProfit(self, mod, ad):
+            return mod.value + ad.value
         def estimateDuration(self, mod, ad):
-            return 1
+            return 2
+        def estimateInaccuracyLoss(self, mod, ad):
+            return 0
 
     ad1, ad2, ad3 = mockAd(1), mockAd(2), mockAd(3)
     mod1, mod2, mod3 = mockMod(1), mockMod(2), mockMod(3)
-    mod2.idle = False
-
+    mod2.totalTaskRemainTime = 1
     allocator = GreedyIdleOnlyAllocator(mockUnitTimeValueEstimator())
     allocator.allocate([ad1, ad2, ad3], [mod1, mod2, mod3])
-
-    ok = not mod1.isIdle() and not mod2.isIdle() and not mod3.isIdle() and ad2.isAssigned and ad3.isAssigned
+    ok = not mod1.isIdle() and not mod2.isIdle() and not mod3.isIdle()
     ok = ok and ad2.assigned == mod1 and ad3.assigned == mod3
     if ok:
         print("GreedyIdleOnlyAllocatorTest passed")
     else:
         print("GreedyIdleOnlyAllocatorTest failed")
+
+greedyIdleOnlyAllocatorTest()
