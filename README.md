@@ -204,6 +204,9 @@ To run the simulation, run the file `test.py`. You may specify flags:
 
 ## Project Result
 
+### TLDR: 
+**Our greedy-based algorithm achieved SOTA in all rubrics include matching_loss and utilization rate.**  
+
 Please refer to `analysis.ipynb` for experiments details and detialed analysis of the different algorithms.
 
 ## Future Scope
@@ -223,7 +226,7 @@ Our next steps include:
 
 **Zebang:** A second year student majored in Data Science & Analytics.
 
-**Shuyao:**  A year 2 CS major.
+[**Shuyao:**](https://tim-siu.github.io)  Year 2 CS major.
 
 Feel free to explore our repository and share your feedback. Let's make the digital advertising space a safer and more
 efficient platform for all users!
