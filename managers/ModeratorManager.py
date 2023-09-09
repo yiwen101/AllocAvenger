@@ -8,6 +8,8 @@ class ModeratorManager:
 
     def __init__(self, moderators):
         self.moderators = moderators
+        for i in range(len(moderators)):
+            moderators[i].id = i
         self.workingModerators = moderators.copy()
 
     def getModerators(self):
@@ -48,8 +50,11 @@ def ModeratorManagerTest():
     modManager = ModeratorManager([mod1, mod2, mod3])
     ok = modManager.getModerators() == mods
     modManager.work()
+    ok = ok and mod1.id == 0 and mod2.id == 1 and mod3.id == 2
     ok = ok and mod1.totalWorkTime == 1 and mod2.totalWorkTime == 1 and mod3.totalWorkTime == 1
     if ok:
         print("ModeratorManagerTest passed")
     else:
         print("ModeratorManagerTest failed")
+
+ModeratorManagerTest()

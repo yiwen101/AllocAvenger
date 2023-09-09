@@ -7,6 +7,7 @@ class Moderator:
         self.effectiveWorkTime = 0
         self.totalWorkTime = 0
         self.isWorking = True
+        self.id = None
 
     def isIdle(self):
         return self.isWorking and len(self.tasks) == 0
