@@ -161,9 +161,16 @@ inaccuracies and losses.
 
 ## How to Run
 
-To run the setup script, use the command `python setup.py`.
+To run the setup script, run the file `setup.py`.
 
-Please refer to `test.py` on how to run the simulation with our algorithm.
+To run the simulation, run the file `test.py`. You may specify flags:
+
+- `-d` for distribution of advertisements. Use `even` for uniform distribution of advertisements throughout the day, and use `uneven` for non-uniform distribution. The default is `even`.
+- `-v` for volume, which controls the total number of advertisements. This should be a float value between around 0.5 to 3. The default is 1.
+- `-p` for punishment factor, which controls the loss induced when a moderator erroneously pass an potentially harmful advertisement. This should be a positive float number. The default is 2.
+- `-s` for type of data source. Use `raw` for the given data set, and use `synthetic` for artificially created data following the same patterns as the given data set. The default is `raw`.
+- `-a` for allocation algorithms. Options include `random`, `greedy_idle`, `greedy` and `greedy_farseeing`. The last corresponds to ModelBasedGreedyAllocator above. Refer to the above for more details on allocators. The default is `greedy`.
+- `-f` for file name. You may specify the export file name with this flag. The default file name simply lists the parameters above.
 
 ## Future Scope
 
