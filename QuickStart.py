@@ -31,7 +31,6 @@ def quick_start():
     mod_manager = ModeratorManager(mod_list_builder.build_random(350))
     matchEstimator = ModeratorUnitTimeValueEstimator(durationEstimator, accuracyEstimator, punishingFactor)
     results = simulateExtended(ad_manager, mod_manager, RandomAllocator(matchEstimator))
-    results = simulateExtended(ad_manager, mod_manager, RandomAllocator(matchEstimator))
 
     # Directory where you want to save the results
     results_dir = 'simulation_results'
@@ -39,7 +38,7 @@ def quick_start():
         os.makedirs(results_dir)
 
     # File path to save the results
-    file_path = os.path.join(results_dir, 'results.json')
+    file_path = os.path.join(results_dir, 'result_sample.json')
 
     # Save the results to a JSON file
     with open(file_path, 'w') as f:
