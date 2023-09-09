@@ -21,12 +21,39 @@ Digital platforms like TikTok rely heavily on advertisement reviews to ensure sa
 
 ### 2. `managers` Package:
 
+This package primarily manages the simulations concerning advertisements and moderators. There are two core components, each responsible for handling data related to advertisements and moderators.
+
 **Components**:
 
-- `AdvertisementManager`: Manages advertisement data for simulations.
-- `ModeratorManager`: Manages moderator data for simulations.
+1. **`AdvertisementManager`**: 
+    - **Purpose**: Manages advertisement data flow for simulations and tracks various advertisement metrics such as losses and completion status.
+    - **Methods**:
+        - `update()`: Update the status of advertisements. This includes removing completed ads, updating losses, and fetching new incoming ads.
+        - `getUnassignedAds()`: Returns a list of ads that have not been assigned yet.
+        - `allDone()`: Checks if all the ads have been processed or not.
+        - `getLoss()`: Returns the total loss accumulated from all advertisements.
+        - `getLossList()`: Returns a list of losses for each advertisement.
 
-Both of these managers work as the primary drivers for the simulation, interacting with the `algoObject` to produce results like utilization rate and pairing loss.
+    - **Attributes**:
+        - `advertisementStream`: The stream of incoming advertisements.
+        - `allAds`: A list that contains all ads.
+        - `incompletedAds`: A dictionary that holds ads which are not yet completed.
+        - `unAssignedAds`: A dictionary that holds ads which are not yet assigned.
+        - `timeRound`: A counter indicating the current round of time.
+        - `nextId`: An incrementing identifier for new ads.
+        - `totalLost`: Accumulated loss from the ads.
+
+2. **`ModeratorManager`**:
+    - **Purpose**: Manages the pool of moderators and tracks metrics related to their work, such as utilization rate.
+    - **Methods**:
+        - `getModerators()`: Returns the list of working moderators.
+        - `work()`: Updates the status of moderators' tasks and removes moderators who aren't working from the active list.
+        - `getUtilRate()`: Returns the average utilization rate of all moderators.
+        - `getUtilRateList()`: Returns a list of individual utilization rates for each moderator.
+
+    - **Attributes**:
+        - `moderators`: The list of all moderators.
+        - `workingModerators`: The list of currently working moderators.
 
 ### 3. `algorithms.estimators` Package:
 
@@ -52,7 +79,7 @@ The `algorithms.estimators` package is designed to provide a set of tools to eva
 
 - `AccuracyEstimator`: Estimates the accuracy level of a moderator while handling an ad.
 
-### `algorithms.allocators` Package:
+### 4.`algorithms.allocators` Package:
 
 This package consists of various allocator classes, each of which has its own approach to assign ads to moderators. The core aim of these allocator classes is to maximize the efficiency and effectiveness of ad allocation while minimizing inaccuracies and losses.
 

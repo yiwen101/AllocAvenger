@@ -35,7 +35,6 @@ def simulateExtended(adManager: AdvertisementManager, modManager: ModeratorManag
 
         modManager.work()
         timestep += 1
-        print(timestep)
 
     waitLoss = adManager.getLoss()
     inaccuracyLoss = allocator.getInaccuracyLoss()

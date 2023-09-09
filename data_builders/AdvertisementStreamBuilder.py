@@ -17,7 +17,7 @@ class AdvertisementStreamBuilder:
     ads = list(map(lambda x: Advertisement(x, self.estimator), ads_dic))
     return ads
   
-  def build_normal_distribution_stream(self, num_ads, num_time_steps):
+  def build_even_distribution_stream(self, num_ads, num_time_steps):
     ads_list = self.get_ads_list(num_ads)
     ads_stream = []
     for t in range(num_time_steps):
@@ -29,7 +29,7 @@ class AdvertisementStreamBuilder:
         ads_stream.append(selected_objects)
     return ads_stream
   
-  def build_exponential_distribution_stream(self, num_ads, num_time_steps):
+  def build_uneven_distribution_stream(self, num_ads, num_time_steps):
     ads_list = self.get_ads_list(num_ads)
     ads_stream = []
     nums = np.random.exponential(2, num_time_steps)

@@ -91,4 +91,4 @@ def greedyIdleOnlyAllocatorTest():
     else:
         print("GreedyIdleOnlyAllocatorTest failed")
 
-greedyIdleOnlyAllocatorTest()
+# greedyIdleOnlyAllocatorTest()
