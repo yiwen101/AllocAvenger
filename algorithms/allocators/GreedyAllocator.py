@@ -57,16 +57,22 @@ def greedyAllocatorTest():
         def __init__(self, value):
             self.value = value
             self.totalTaskRemainTime = 0
+            self.id = None
+            self.properties = {"market": ["US", "CA"]}
 
         def assign(self, ad, duration):
             self.totalTaskRemainTime += duration
             ad.assignTo(self)
+            return True
+        def isIdle(self):
+            return self.totalTaskRemainTime == 0
 
     class mockAd:
         def __init__(self, value):
             self.value = value
             self.isAssigned = False
             self.assigned = None
+            self.properties = {"delivery_country": "US"}
 
         def assign(self):
             self.isAssigned = True
@@ -76,17 +82,23 @@ def greedyAllocatorTest():
 
     class mockUnitTimeValueEstimator:
         def estimate(self, mod, ad):
-            return mod.value
-
+            return (mod.value + ad.value)/2
+        def estimateProfit(self, mod, ad):
+            return mod.value + ad.value
         def estimateDuration(self, mod, ad):
-            return 5
+            return 2
+        def estimateInaccuracyLoss(self, mod, ad):
+            return 0
 
-    mod1, mod9 = mockMod(1), mockMod(9)
-    ad1, ad2, ad3 = mockAd(1), mockAd(2), mockAd(3)
+    mod1, mod9 = mockMod(1), mockMod(8)
+    ad1, ad2, ad3, ad4, ad5 = mockAd(0), mockAd(2), mockAd(3),mockAd(4), mockAd(5)
     allocator = GreedyAllocator(mockUnitTimeValueEstimator())
-    allocator.allocate([ad1, ad2, ad3], [mod1, mod9])
-    ok = ad3.assigned == mod9 and ad2.assigned == mod9 and ad1.assigned == mod1
+    allocator.allocate([ad1, ad2, ad3, ad4,ad5], [mod1, mod9])
+    # 13/2 vs 6/2; 12/4 vs 5/2; 11/6 vs 4/2; 10/6 vs 3/4; 9/8 vs 2/2
+    ok = ad3.assigned == mod1 and ad2.assigned == mod9 and ad1.assigned == mod9 and ad4.assigned == mod9 and ad5.assigned == mod9
     if ok:
         print("GreedyAllocatorTest passed")
     else:
         print("GreedyAllocatorTest failed")
+
+greedyAllocatorTest()
