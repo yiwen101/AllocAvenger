@@ -38,7 +38,7 @@ def main():
     if args.source == "synthetic":
       ads_producer = AdvertisementPropertiesProducer()
       mods_producer = ModeratorPropertiesProducer()
-    ads_volume = int(10000 * args.volume)
+    ads_volume = int(15000 * args.volume)
     ad_stream_builder = AdvertisementStreamBuilder(ads_producer, RevenueRiskBasedValueEstimator(RevenueEstimator(), RiskEstimator(), args.punishment_factor))
     mod_list_builder = ModeratorListBuilder(mods_producer)
     stream = ad_stream_builder.build_even_distribution_stream(ads_volume, 1440)
