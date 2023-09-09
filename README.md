@@ -13,6 +13,30 @@ aim of our project is to:
 - Assign the most suitable moderator for a particular ad review, considering factors such as language fit and accuracy
   of moderation.
 
+## Features
+### Functional Features:
+
+An array of Algorithms that allocate advertisement to moderators in run time by estimating their values.
+
+Simulate advertisement arriving at different patterns (peak hours, uniform distribution etc).
+
+Simulate advertisement and moderators by analysising the distribution pattern of properties in the data input to generate "virtual" advertisement/moderator objects. 
+
+And of course, we also support sampling advertisement/moderator objects from the real advertisement/moderator inputs
+
+A Simulator that combines all the components above to produce analysis of the behaviors of each algorithm for each particular input conditions.
+
+A Visualization component and help with the analysis of the result of simulation.
+
+### Non-Fuctional Features:
+Extensibility: 
+
+Our model can esily extends for adding more fields to the data in the excel. This is done by building a "properties" component which is a map of headings to values.
+
+Our simulation can also easily extends for other value estimation and advertisement to moderator pairing, as long as they fulfill our interface.
+
+Robuestness: we did extensive testing to ensure the robustness of our porject.
+
 ## Project Structure
 
 ### 1. `data_builders` Package:
@@ -136,6 +160,8 @@ inaccuracies and losses.
 
 
 ## How to Run
+
+To run the setup script, use the command `python setup.py`.
 
 Please refer to `test.py` on how to run the simulation with our algorithm.
 
