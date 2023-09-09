@@ -102,4 +102,4 @@ def greedyAllocatorTest():
     else:
         print("GreedyAllocatorTest failed")
       
-greedyAllocatorTest()
+# greedyAllocatorTest()
