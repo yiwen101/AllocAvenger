@@ -51,35 +51,36 @@ The `algorithms.estimators` package is designed to provide a set of tools to eva
 
 
 - `AccuracyEstimator`: Estimates the accuracy level of a moderator while handling an ad.
-  
 
-## Current Progress
+### `algorithms.allocators` Package:
 
-At the moment, we're in the process of testing and refining algorithms to allocate ads to moderators. We've implemented two naive, greedy-based algorithms and are researching the application of queueing theory to develop more efficient solutions.
+This package consists of various allocator classes, each of which has its own approach to assign ads to moderators. The core aim of these allocator classes is to maximize the efficiency and effectiveness of ad allocation while minimizing inaccuracies and losses.
 
-## Updates as of 22:30, Sep 8: New Features and Progress
+**Components**:
 
-**1. Simple Testing Updates**:
-- We've successfully enabled the functionality for `simple_test()`. Please note that filtering moderators by country is yet to be implemented.
+1. **`RandomAllocator`**: 
+    - **Purpose**: This class randomly allocates ads to moderators without considering any optimization.
+    - **Methods**:
+        - `allocate(ads, mods)`: Allocates ads to moderators. It tries to match ads and moderators based on the delivery country. If no suitable moderator is found, the ad is rejected.
+        - `getInaccuracyLoss()`: Returns the total inaccuracy loss accumulated during allocation.
 
-**2. Loss Estimation**:
-- A significant addition has been made with the introduction of `ModeratorUnitTimeValueEstimator`. This helps in estimating the loss due to inaccurate moderation.
-- This estimated value contributes to the total loss calculation.
-- The allocator has been designed to store this loss information, especially since it's aware of which advertisement job has been assigned to which moderator.
+2. **`ModelBasedGreedyAllocator`**: 
+    - **Purpose**: Allocates ads to moderators based on a greedy approach while considering future tasks for each moderator.
+    - **Methods**:
+        - `allocate(ads, mods)`: Allocates ads based on their value to the most suitable moderator. The allocation considers the ad's value, the moderator's current tasks, and future tasks.
+        - `getInaccuracyLoss()`: Returns the total inaccuracy loss accumulated during allocation.
 
-## Updates as of 00:30, Sep 9: New Features and Progress
+3. **`GreedyIdleOnlyAllocator`**:
+    - **Purpose**: This allocator uses a greedy approach but only considers currently idle moderators.
+    - **Methods**:
+        - `allocate(ads, mods)`: Allocates the most valuable ads to the most suitable idle moderator based on the value estimation.
+        - `getInaccuracyLoss()`: Returns the total inaccuracy loss accumulated during allocation.
 
-**1. Allocating Algorithm Enhanced**:
-- Moderator's work limit and market match works as intended
-
-### Challenges Faced
-
-Due to the ambiguous nature of the provided data and problem statement, we faced a few challenges:
-
-- Lack of simulation environment: There is no environment provided. We are setting our own environment for this project.
-- Potential discrepancies in data, such as the inconsistency between `p_date` and `start_time`.
-- Lack of interpretability for the data and lack of data in general: For example, we don't know whether a specific ads in the data is harmful or not. This makes calculating revenue of a simulation run imfessible.
-- Undefined Scoring Function: We are asked to build a scoring function, but there is no label for that. We attempted to optimize it end-to-end by optimising revenue, yet we don't know how revenue is calculated.
+4. **`GreedyAllocator`**:
+    - **Purpose**: A greedy algorithm that allocates ads to moderators, always aiming to assign the most valuable ad to the most suitable moderator.
+    - **Methods**:
+        - `allocate(ads, mods)`: Like the `ModelBasedGreedyAllocator`, it assigns the most valuable ad to the most suitable moderator. However, it doesn't consider future tasks and keeps trying until a successful assignment or all options are exhausted.
+        - `getInaccuracyLoss()`: Returns the total inaccuracy loss accumulated during allocation.
 
 ## How to Run
 
