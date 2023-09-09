@@ -6,7 +6,7 @@ for dist in even uneven; do
         for punish in 1 2 3; do
             for src in raw synthetic; do
                 for algo in random greedy_idle greedy; do
-                    FILENAME="result_${dist}_${vol}_${punish}_${src}_${algo}.txt"
+                    FILENAME="result_${dist}_${vol}_${punish}_${src}_${algo}.json"
                     echo "Running for distribution: $dist, volume: $vol, punishment_factor: $punish, source: $src, algorithm: $algo"
                     python $SCRIPT -d $dist -v $vol -p $punish -s $src -a $algo -f $FILENAME
                 done
