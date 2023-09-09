@@ -33,7 +33,9 @@ class AdvertisementPropertiesProducer():
         def generate_numerical(df, col, size):
             mean = df[col].mean()
             std = df[col].std()
-            return np.random.normal(mean, std, size).astype(np.int64)
+            arr = np.random.normal(mean, std, size).astype(np.float32)
+            arr[arr == 0] = mean
+            return arr
         
         def generate_dependent_numerical(df, cols, size):
             scaled_df = df[cols].dropna()

@@ -32,7 +32,9 @@ class ModeratorPropertiesProducer():
         def generate_numerical(df, col, size):
             mean = df[col].mean()
             std = df[col].std()
-            return np.random.normal(mean, std, size)
+            arr = np.random.normal(mean, std, size)
+            arr[arr == 0] = mean
+            return arr
 
         synthetic_df = pd.DataFrame()
         
